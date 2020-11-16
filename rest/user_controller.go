@@ -10,7 +10,7 @@ import (
 
 // 获取用户数据
 func GetUserByUserId(ctx *gin.Context) {
-	id := cast.ToUint64(ctx.Query("id"))
+	id := cast.ToInt64(ctx.Query("id"))
 
 	user, err := service.UserService.GetUserById(id)
 	if err != nil {

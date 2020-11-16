@@ -16,7 +16,7 @@ func (s *Store) UpdateUser(user *models.User) error {
 }
 
 // 根据用户ID查询用户
-func (s *Store) GetUserById(id uint64) (*models.User, error) {
+func (s *Store) GetUserById(id int64) (*models.User, error) {
 	var user models.User
 	err := s.db.First(&user, id).Error
 	if err == gorm.ErrRecordNotFound {

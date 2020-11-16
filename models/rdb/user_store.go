@@ -9,7 +9,7 @@ import (
 )
 
 // 获取用户缓存
-func (s *Store) GetUser(userId uint64) (*models.User, error) {
+func (s *Store) GetUser(userId int64) (*models.User, error) {
 	b, err := s.client.Get(context.Background(), fmt.Sprintf("user:%v", userId)).Bytes()
 	if err != nil {
 		if err == redis.Nil {

@@ -10,7 +10,7 @@ type userService struct{}
 var UserService = new(userService)
 
 // 获取用户
-func (s *userService) GetUserById(id uint64) (*models.User, error) {
+func (s *userService) GetUserById(id int64) (*models.User, error) {
 	return mysql.Shared().GetUserById(id)
 }
 
