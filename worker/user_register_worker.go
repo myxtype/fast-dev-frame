@@ -3,7 +3,6 @@ package worker
 import (
 	"frame/models/rdb"
 	"frame/pkg/logger"
-	"frame/pkg/queue"
 	"time"
 )
 
@@ -38,7 +37,8 @@ func (w *UserRegisterWorker) Start() {
 
 // 监听消息队列通知
 func (w *UserRegisterWorker) runMqListener() {
-	q := queue.NewQueue("registered", rdb.Shared().DB())
+	q := rdb.Shared().NewQueue("registered")
+
 	for {
 		job, err := q.Pop(2 * time.Second)
 		if job == nil {
