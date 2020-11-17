@@ -10,6 +10,7 @@ Go后端快速开发框架
 - 配置：viper
 - 任务调度：cron.v3
 - 接口限流器：tollbooth
+- 类型转换：cast
 
 # How to use
 
@@ -19,6 +20,7 @@ Go后端快速开发框架
 
 目录介绍：
 
+- admin 管理后台接口目录，存放管理后台的`controller`和路由。
 - cmd 可执行文件目录，所有编译后的执行文件都在此处。
 - conf 配置文件目录，请将你的配置结构体放到`conf/config.go`中。
 - job 定时任务目录，将定时任务的调度放到`job/bootstrap`中。

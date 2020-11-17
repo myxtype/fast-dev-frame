@@ -63,6 +63,7 @@ func initDb() error {
 	// 迁移
 	if cfg.DataSource.Migrate {
 		gdb.AutoMigrate(&models.User{})
+		gdb.AutoMigrate(&models.AdminUser{})
 	}
 
 	store = NewStore(gdb)

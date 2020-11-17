@@ -6,6 +6,10 @@
 [RestServer]
 Addr = "127.0.0.1:8000"
 
+# Admin服务配置
+[RestServer]
+Addr = "127.0.0.1:8001"
+
 # 数据库配置
 [DataSource]
 Addr = "127.0.0.1:3600"

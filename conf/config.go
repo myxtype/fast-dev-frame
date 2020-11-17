@@ -2,13 +2,14 @@ package conf
 
 // 全局配置
 type gbeConfig struct {
-	RestServer restServerConfig
-	DataSource dataSourceConfig
-	Redis      redisConfig
+	RestServer  serverConfig
+	AdminServer serverConfig
+	DataSource  dataSourceConfig
+	Redis       redisConfig
 }
 
 // 接口服务配置
-type restServerConfig struct {
+type serverConfig struct {
 	Addr string // 监听地址
 }
 
