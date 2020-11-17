@@ -33,6 +33,7 @@ package queue
 //		}
 //
 //		// 将id放入特定的chan中，以便快速拉取下一个任务
+//		// 参看 worker
 //		workerChs[id%10] <- id
 //	}
 //}

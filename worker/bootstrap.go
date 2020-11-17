@@ -1,5 +1,7 @@
 package worker
 
 func StartWorker() {
-	// todo
+	NewUserRegisterWorker().Start()
+
+	select {}
 }
