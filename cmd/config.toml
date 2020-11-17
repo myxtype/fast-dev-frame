@@ -7,7 +7,7 @@
 Addr = "127.0.0.1:8000"
 
 # Admin服务配置
-[RestServer]
+[AdminServer]
 Addr = "127.0.0.1:8001"
 
 # 数据库配置

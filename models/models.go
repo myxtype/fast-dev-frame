@@ -9,7 +9,7 @@ type User struct {
 	ID        int64 `gorm:"primaryKey;autoIncrement"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	Username  string `gorm:"uniqueIndex"`
+	Username  string `gorm:"uniqueIndex;size:255"`
 	Password  string
 }
 
@@ -18,7 +18,7 @@ type AdminUser struct {
 	ID          int64 `gorm:"primaryKey;autoIncrement"`
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
-	Username    string `gorm:"uniqueIndex"`
+	Username    string `gorm:"uniqueIndex;size:255"`
 	Password    string
 	LastLoginAt *time.Time
 }
