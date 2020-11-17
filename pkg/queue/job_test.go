@@ -10,7 +10,7 @@ func TestNewDelayQueueJob(t *testing.T) {
 }
 
 func TestDelayQueueJob_Bytes(t *testing.T) {
-	job, err := NewDelayQueueJob("test2")
+	job, err := NewDelayQueueJob(1000)
 	if err != nil {
 		t.Error(err)
 	}

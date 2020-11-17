@@ -20,7 +20,7 @@ func NewUserRegisterWorker() *UserRegisterWorker {
 			for {
 				select {
 				case id := <-w.workerChs[idx]:
-					logger.Sugar.Debug(id)
+					logger.Sugar.Info(id)
 					// handle do something
 				}
 			}
@@ -40,7 +40,7 @@ func (w *UserRegisterWorker) runMqListener() {
 	q := rdb.Shared().NewQueue("registered")
 
 	for {
-		job, err := q.Pop(2 * time.Second)
+		job, err := q.Pop(10 * time.Second)
 		if job == nil {
 			if err != nil {
 				logger.Sugar.Error(err)

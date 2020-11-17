@@ -40,7 +40,7 @@ func (q *Queue) Pop(timeout time.Duration) (*QueueJob, error) {
 	}
 
 	var job QueueJob
-	if err := json.Unmarshal([]byte(result[0]), &job); err != nil {
+	if err := json.Unmarshal([]byte(result[1]), &job); err != nil {
 		return nil, err
 	}
 
