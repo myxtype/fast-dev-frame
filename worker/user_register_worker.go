@@ -51,8 +51,8 @@ func (w *UserRegisterWorker) runMqListener() {
 
 		var id int64
 		if err := job.Unmarshal(&id); err != nil {
-			logger.Sugar.Error(err)
-			time.Sleep(1 * time.Second)
+			logger.Sugar.Error(err, job)
+			time.Sleep(time.Second)
 			continue
 		}
 
