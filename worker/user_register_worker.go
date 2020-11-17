@@ -44,6 +44,7 @@ func (w *UserRegisterWorker) runMqListener() {
 		if job == nil {
 			if err != nil {
 				logger.Sugar.Error(err)
+				time.Sleep(2 * time.Second) // wait 2 second
 			}
 			continue
 		}
