@@ -6,27 +6,27 @@ import (
 )
 
 // 队列任务
-type DelayQueueJob struct {
+type QueueJob struct {
 	Id   string          `json:"id"`
 	Data json.RawMessage `json:"data"`
 }
 
-func NewDelayQueueJob(msg interface{}) (*DelayQueueJob, error) {
+func NewDelayQueueJob(msg interface{}) (*QueueJob, error) {
 	data, err := json.Marshal(msg)
 	if err != nil {
 		return nil, err
 	}
-	return &DelayQueueJob{
+	return &QueueJob{
 		Id:   uuid.NewV4().String(),
 		Data: data,
 	}, nil
 }
 
-func (j *DelayQueueJob) Bytes() []byte {
+func (j *QueueJob) Bytes() []byte {
 	b, _ := json.Marshal(j)
 	return b
 }
 
-func (j *DelayQueueJob) Unmarshal(dst interface{}) error {
+func (j *QueueJob) Unmarshal(dst interface{}) error {
 	return json.Unmarshal(j.Data, dst)
 }

@@ -38,14 +38,13 @@ func (w *UserRegisterWorker) Start() {
 
 // 监听消息队列通知
 func (w *UserRegisterWorker) runMqListener() {
-	q := queue.NewDelayQueue("registered", rdb.Shared().DB())
+	q := queue.NewQueue("registered", rdb.Shared().DB())
 	for {
-		job, err := q.Pop()
+		job, err := q.Pop(2 * time.Second)
 		if job == nil {
 			if err != nil {
 				logger.Sugar.Error(err)
 			}
-			time.Sleep(time.Second)
 			continue
 		}
 

@@ -38,7 +38,7 @@ func (q *DelayQueue) Push(msg interface{}, delayAt time.Time) error {
 }
 
 // 取出一个任务
-func (q *DelayQueue) Pop() (*DelayQueueJob, error) {
+func (q *DelayQueue) Pop() (*QueueJob, error) {
 	res, err := q.db.ZRangeByScore(context.Background(), q.formatKey(), &redis.ZRangeBy{
 		Min:    "0",
 		Max:    strconv.FormatInt(time.Now().Unix(), 10),
@@ -56,7 +56,7 @@ func (q *DelayQueue) Pop() (*DelayQueueJob, error) {
 	}
 	msg := []byte(res[0])
 
-	var job DelayQueueJob
+	var job QueueJob
 	if err := json.Unmarshal(msg, &job); err != nil {
 		return nil, err
 	}
