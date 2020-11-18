@@ -1,7 +1,9 @@
 package worker
 
 import (
+	"frame/models/rdb"
 	"frame/pkg/logger"
+	"frame/pkg/queworker"
 	"frame/pkg/worker"
 	"os"
 	"os/signal"
@@ -11,10 +13,11 @@ import (
 func StartWorker() {
 	wm := worker.NewWorkerManager()
 
-	wm.AddWorker(NewUserRegisterWorker())
-	// add more
+	wm.AddWorker(queworker.NewQueueWorker(rdb.Shared().NewQueue("registered"), &UserRegisterHandler{}))
+	// to add more here
 
 	wm.Start()
+	logger.Logger.Info("All worker started")
 
 	quit := make(chan os.Signal)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
