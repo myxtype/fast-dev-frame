@@ -13,6 +13,7 @@ import (
 func StartWorker() {
 	wm := worker.NewWorkerManager()
 
+	// 用户注册成功后的消息
 	wm.AddWorker(queworker.NewQueueWorker(rdb.Shared().NewQueue("registered"), &UserRegisterHandler{}))
 	// to add more here
 
