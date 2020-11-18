@@ -33,10 +33,7 @@ func (q *DelayQueue) Push(msg interface{}, delayAt time.Time) error {
 		return err
 	}
 
-	return q.db.ZAdd(context.Background(), q.formatKey, &redis.Z{
-		Score:  float64(delayAt.Unix()),
-		Member: job.Bytes(),
-	}).Err()
+	return q.PushJob(job, delayAt)
 }
 
 // 取出一个任务
@@ -71,4 +68,11 @@ func (q *DelayQueue) Pop(ctx context.Context) (*QueueJob, error) {
 	}
 
 	return &job, nil
+}
+
+func (q *DelayQueue) PushJob(job *QueueJob, delayAt time.Time) error {
+	return q.db.ZAdd(context.Background(), q.formatKey, &redis.Z{
+		Score:  float64(delayAt.Unix()),
+		Member: job.Bytes(),
+	}).Err()
 }

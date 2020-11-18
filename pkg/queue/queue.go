@@ -28,7 +28,7 @@ func (q *Queue) Push(msg interface{}) error {
 		return err
 	}
 
-	return q.db.LPush(context.Background(), q.formatKey, job.Bytes()).Err()
+	return q.PushJob(job)
 }
 
 // 取出一个任务
@@ -47,4 +47,8 @@ func (q *Queue) Pop(ctx context.Context, timeout time.Duration) (*QueueJob, erro
 	}
 
 	return &job, nil
+}
+
+func (q *Queue) PushJob(job *QueueJob) error {
+	return q.db.LPush(context.Background(), q.formatKey, job.Bytes()).Err()
 }
