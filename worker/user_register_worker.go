@@ -1,6 +1,7 @@
 package worker
 
 import (
+	"context"
 	"frame/models/rdb"
 	"frame/pkg/logger"
 	"time"
@@ -40,7 +41,7 @@ func (w *UserRegisterWorker) runMqListener() {
 	q := rdb.Shared().NewQueue("registered")
 
 	for {
-		job, err := q.Pop(10 * time.Second)
+		job, err := q.Pop(context.Background(), 10*time.Second)
 		if job == nil {
 			if err != nil {
 				logger.Sugar.Error(err)

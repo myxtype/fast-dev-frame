@@ -30,8 +30,8 @@ func (q *Queue) Push(msg interface{}) error {
 }
 
 // 取出一个任务
-func (q *Queue) Pop(timeout time.Duration) (*QueueJob, error) {
-	result, err := q.db.BRPop(context.Background(), timeout, q.formatKey()).Result()
+func (q *Queue) Pop(ctx context.Context, timeout time.Duration) (*QueueJob, error) {
+	result, err := q.db.BRPop(ctx, timeout, q.formatKey()).Result()
 	if err != nil {
 		if err == redis.Nil {
 			return nil, nil
