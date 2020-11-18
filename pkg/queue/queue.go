@@ -8,14 +8,16 @@ import (
 )
 
 type Queue struct {
-	db      *redis.Client
-	jobName string
+	db        *redis.Client
+	jobName   string
+	formatKey string
 }
 
 func NewQueue(name string, db *redis.Client) *Queue {
 	return &Queue{
-		db:      db,
-		jobName: name,
+		db:        db,
+		jobName:   name,
+		formatKey: "queue:" + name,
 	}
 }
 
@@ -26,12 +28,12 @@ func (q *Queue) Push(msg interface{}) error {
 		return err
 	}
 
-	return q.db.LPush(context.Background(), q.formatKey(), job.Bytes()).Err()
+	return q.db.LPush(context.Background(), q.formatKey, job.Bytes()).Err()
 }
 
 // 取出一个任务
 func (q *Queue) Pop(ctx context.Context, timeout time.Duration) (*QueueJob, error) {
-	result, err := q.db.BRPop(ctx, timeout, q.formatKey()).Result()
+	result, err := q.db.BRPop(ctx, timeout, q.formatKey).Result()
 	if err != nil {
 		if err == redis.Nil {
 			return nil, nil
@@ -45,8 +47,4 @@ func (q *Queue) Pop(ctx context.Context, timeout time.Duration) (*QueueJob, erro
 	}
 
 	return &job, nil
-}
-
-func (q *Queue) formatKey() string {
-	return "queue:" + q.jobName
 }

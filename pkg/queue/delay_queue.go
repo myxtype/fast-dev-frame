@@ -13,14 +13,16 @@ import (
  * 适用于简单的Worker任务
  */
 type DelayQueue struct {
-	db      *redis.Client
-	jobName string
+	db        *redis.Client
+	jobName   string
+	formatKey string
 }
 
 func NewDelayQueue(name string, db *redis.Client) *DelayQueue {
 	return &DelayQueue{
-		db:      db,
-		jobName: name,
+		db:        db,
+		jobName:   name,
+		formatKey: "delay-queue:" + name,
 	}
 }
 
@@ -31,7 +33,7 @@ func (q *DelayQueue) Push(msg interface{}, delayAt time.Time) error {
 		return err
 	}
 
-	return q.db.ZAdd(context.Background(), q.formatKey(), &redis.Z{
+	return q.db.ZAdd(context.Background(), q.formatKey, &redis.Z{
 		Score:  float64(delayAt.Unix()),
 		Member: job.Bytes(),
 	}).Err()
@@ -39,7 +41,7 @@ func (q *DelayQueue) Push(msg interface{}, delayAt time.Time) error {
 
 // 取出一个任务
 func (q *DelayQueue) Pop() (*QueueJob, error) {
-	res, err := q.db.ZRangeByScore(context.Background(), q.formatKey(), &redis.ZRangeBy{
+	res, err := q.db.ZRangeByScore(context.Background(), q.formatKey, &redis.ZRangeBy{
 		Min:    "0",
 		Max:    strconv.FormatInt(time.Now().Unix(), 10),
 		Offset: 0,
@@ -62,15 +64,11 @@ func (q *DelayQueue) Pop() (*QueueJob, error) {
 	}
 
 	// 删除这个任务
-	if row, err := q.db.ZRem(context.Background(), q.formatKey(), msg).Result(); err != nil {
+	if row, err := q.db.ZRem(context.Background(), q.formatKey, msg).Result(); err != nil {
 		return nil, err
 	} else if row == 0 {
 		return nil, nil
 	}
 
 	return &job, nil
-}
-
-func (q *DelayQueue) formatKey() string {
-	return "delay-queue:" + q.jobName
 }
