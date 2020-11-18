@@ -40,8 +40,8 @@ func (q *DelayQueue) Push(msg interface{}, delayAt time.Time) error {
 }
 
 // 取出一个任务
-func (q *DelayQueue) Pop() (*QueueJob, error) {
-	res, err := q.db.ZRangeByScore(context.Background(), q.formatKey, &redis.ZRangeBy{
+func (q *DelayQueue) Pop(ctx context.Context) (*QueueJob, error) {
+	res, err := q.db.ZRangeByScore(ctx, q.formatKey, &redis.ZRangeBy{
 		Min:    "0",
 		Max:    strconv.FormatInt(time.Now().Unix(), 10),
 		Offset: 0,
@@ -64,7 +64,7 @@ func (q *DelayQueue) Pop() (*QueueJob, error) {
 	}
 
 	// 删除这个任务
-	if row, err := q.db.ZRem(context.Background(), q.formatKey, msg).Result(); err != nil {
+	if row, err := q.db.ZRem(ctx, q.formatKey, msg).Result(); err != nil {
 		return nil, err
 	} else if row == 0 {
 		return nil, nil

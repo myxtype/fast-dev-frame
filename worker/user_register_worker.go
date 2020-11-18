@@ -8,11 +8,19 @@ import (
 )
 
 type UserRegisterWorker struct {
-	workerChs [workerNum]chan int64
+	workerChs  [workerNum]chan int64
+	ctx        context.Context
+	cancelFunc context.CancelFunc
+	stop       bool
 }
 
 func NewUserRegisterWorker() *UserRegisterWorker {
-	w := &UserRegisterWorker{workerChs: [workerNum]chan int64{}}
+	ctx, cancelFunc := context.WithCancel(context.Background())
+	w := &UserRegisterWorker{
+		workerChs:  [workerNum]chan int64{},
+		ctx:        ctx,
+		cancelFunc: cancelFunc,
+	}
 
 	for i := 0; i < workerNum; i++ {
 		w.workerChs[i] = make(chan int64, 8)
@@ -22,7 +30,7 @@ func NewUserRegisterWorker() *UserRegisterWorker {
 				select {
 				case id := <-w.workerChs[idx]:
 					logger.Sugar.Info(id)
-					// handle do something
+					// handle some things
 				}
 			}
 		}(i)
@@ -32,16 +40,36 @@ func NewUserRegisterWorker() *UserRegisterWorker {
 }
 
 func (w *UserRegisterWorker) Start() {
-	go w.runMqListener()
-	logger.Logger.Info("UserRegisterWorker Start")
+	logger.Logger.Info("UserRegisterWorker started")
+	w.runMqListener()
+}
+
+func (w *UserRegisterWorker) Stop() {
+	logger.Logger.Info("UserRegisterWorker stopping")
+
+	w.stop = true
+	w.cancelFunc()
+
+	for i := 0; i < workerNum; i++ {
+		for {
+			if len(w.workerChs[i]) == 0 {
+				break
+			}
+		}
+	}
+
+	logger.Logger.Info("UserRegisterWorker stopped")
 }
 
 // 监听消息队列通知
 func (w *UserRegisterWorker) runMqListener() {
-	q := rdb.Shared().NewQueue("registered")
+	que := rdb.Shared().NewQueue("registered")
 
 	for {
-		job, err := q.Pop(context.Background(), 10*time.Second)
+		if w.stop {
+			return
+		}
+		job, err := que.Pop(w.ctx, 10*time.Second)
 		if job == nil {
 			if err != nil {
 				logger.Sugar.Error(err)
