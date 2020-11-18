@@ -4,39 +4,45 @@ import (
 	"context"
 	"frame/models/rdb"
 	"frame/pkg/logger"
+	"sync"
 	"time"
 )
 
 type UserRegisterWorker struct {
-	workerChs  [workerNum]chan int64
+	workerCh   chan interface{}
 	ctx        context.Context
 	cancelFunc context.CancelFunc
 	stop       bool
+	wg         sync.WaitGroup
 }
 
 func NewUserRegisterWorker() *UserRegisterWorker {
 	ctx, cancelFunc := context.WithCancel(context.Background())
 	w := &UserRegisterWorker{
-		workerChs:  [workerNum]chan int64{},
+		workerCh:   make(chan interface{}, 8),
 		ctx:        ctx,
 		cancelFunc: cancelFunc,
+		wg:         sync.WaitGroup{},
 	}
 
-	for i := 0; i < workerNum; i++ {
-		w.workerChs[i] = make(chan int64, 8)
-
-		go func(idx int) {
-			for {
-				select {
-				case id := <-w.workerChs[idx]:
-					logger.Sugar.Info(id)
-					// handle some things
-				}
+	go func() {
+		for {
+			select {
+			case id := <-w.workerCh:
+				w.Do(id)
 			}
-		}(i)
-	}
+		}
+	}()
 
 	return w
+}
+
+// 执行任务
+func (w *UserRegisterWorker) Do(param interface{}) {
+	defer w.wg.Done()
+
+	time.Sleep(time.Second)
+	logger.Sugar.Info(param)
 }
 
 func (w *UserRegisterWorker) Start() {
@@ -50,13 +56,7 @@ func (w *UserRegisterWorker) Stop() {
 	w.stop = true
 	w.cancelFunc()
 
-	for i := 0; i < workerNum; i++ {
-		for {
-			if len(w.workerChs[i]) == 0 {
-				break
-			}
-		}
-	}
+	w.wg.Wait()
 
 	logger.Logger.Info("UserRegisterWorker stopped")
 }
@@ -85,6 +85,7 @@ func (w *UserRegisterWorker) runMqListener() {
 			continue
 		}
 
-		w.workerChs[id%workerNum] <- id
+		w.wg.Add(1)
+		w.workerCh <- id
 	}
 }
