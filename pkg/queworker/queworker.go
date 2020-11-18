@@ -21,34 +21,42 @@ type QueueWorker struct {
 	stop       bool
 	wg         sync.WaitGroup
 	handler    QueueWorkerHandler
+	conf       *QueueWorkerConfig
 }
 
 type QueueWorkerConfig struct {
-	Buffer int
+	Buffer      int           // 队列缓冲区大小
+	ReadTimeout time.Duration // 队列读取超时时间
+	ReadErrWait time.Duration // 队列中读取错误后等待时间
 }
 
 func DefaultQueueWorkerConfig() *QueueWorkerConfig {
-	return &QueueWorkerConfig{Buffer: 10}
+	return &QueueWorkerConfig{
+		Buffer:      10,
+		ReadTimeout: 5 * time.Second,
+		ReadErrWait: time.Second,
+	}
 }
 
-func NewQueueWorker(que *queue.Queue, handler QueueWorkerHandler, conf ...*QueueWorkerConfig) *QueueWorker {
+func NewQueueWorker(que *queue.Queue, handler QueueWorkerHandler, optionals ...*QueueWorkerConfig) *QueueWorker {
 	ctx, cancelFunc := context.WithCancel(context.Background())
 
-	var c *QueueWorkerConfig
-	if len(conf) > 0 {
-		c = conf[0]
+	var conf *QueueWorkerConfig
+	if len(optionals) > 0 {
+		conf = optionals[0]
 	} else {
-		c = DefaultQueueWorkerConfig()
+		conf = DefaultQueueWorkerConfig()
 	}
 
 	w := &QueueWorker{
-		workerCh:   make(chan *queue.QueueJob, c.Buffer),
+		workerCh:   make(chan *queue.QueueJob, conf.Buffer),
 		que:        que,
 		ctx:        ctx,
 		cancelFunc: cancelFunc,
 		stop:       false,
 		wg:         sync.WaitGroup{},
 		handler:    handler,
+		conf:       conf,
 	}
 
 	go func() {
@@ -86,11 +94,11 @@ func (w *QueueWorker) runMqListener() {
 		if w.stop {
 			return
 		}
-		job, err := w.que.Pop(w.ctx, 5*time.Second)
+		job, err := w.que.Pop(w.ctx, w.conf.ReadTimeout)
 		if job == nil {
 			if err != nil {
 				logger.Sugar.Error(err)
-				time.Sleep(1 * time.Second) // wait 2 second
+				time.Sleep(w.conf.ReadErrWait)
 			}
 			continue
 		}
