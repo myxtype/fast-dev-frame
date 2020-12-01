@@ -18,7 +18,7 @@ func GetUserByUserId(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, NewResponseVo(nil, user))
+	ctx.JSON(http.StatusOK, NewResponseVo(nil, NewUserVo(user)))
 }
 
 type UserRegisterRequest struct {

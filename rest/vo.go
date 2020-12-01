@@ -1,7 +1,9 @@
 package rest
 
 import (
+	"frame/models"
 	"frame/pkg/ecode"
+	"time"
 )
 
 // 响应的数据结构
@@ -24,5 +26,21 @@ func NewResponseVo(err error, args ...interface{}) *ResponseVo {
 		Code:    ec.Code(),
 		Message: ec.Message(),
 		Data:    data,
+	}
+}
+
+type UserVo struct {
+	ID        int64     `json:"id"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
+	Username  string    `json:"username"`
+}
+
+func NewUserVo(v *models.User) *UserVo {
+	return &UserVo{
+		ID:        v.ID,
+		CreatedAt: v.CreatedAt,
+		UpdatedAt: v.UpdatedAt,
+		Username:  v.Username,
 	}
 }
