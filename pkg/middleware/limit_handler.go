@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 接口限制
+// 请求限制器
 func LimitHandler(lmt *limiter.Limiter) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		httpError := tollbooth.LimitByRequest(lmt, c.Writer, c.Request)
