@@ -23,8 +23,8 @@ func init() {
 
 func GetConfig() *gbeConfig {
 	configOnce.Do(func() {
-		viper.SetConfigName("config")
-		viper.SetConfigType("toml")
+		viper.SetConfigName("config") // 配置文件名称
+		viper.SetConfigType("toml")   // 配置文件类型
 		if configPath == "" {
 			if p, err := execPath(); err == nil {
 				for _, n := range p {
