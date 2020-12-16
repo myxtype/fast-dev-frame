@@ -2,9 +2,9 @@ package conf
 
 import (
 	"flag"
-	"frame/pkg/logger"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
+	"log"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -40,8 +40,8 @@ func GetConfig() *gbeConfig {
 		// 设置配置文件监听
 		viper.WatchConfig()
 		viper.OnConfigChange(func(e fsnotify.Event) {
-			if err := viper.Unmarshal(&config); err == nil {
-				logger.Logger.Debug("reload config file")
+			if err := viper.Unmarshal(&config); err != nil {
+				log.Println("reload config error", err)
 			}
 		})
 		if err := viper.Unmarshal(&config); err != nil {
