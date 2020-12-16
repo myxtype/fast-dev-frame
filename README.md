@@ -31,3 +31,15 @@ Go后端快速开发框架
 - worker 任务目录，队列，或者需要一直跑的任务。
 
 你可以添加更多的目录来表示你的服务，例如：`websocket`表示你为用户提供长连接服务，你需要遵循规范，在`cmd`目录下创建与服务名称相同的文件夹，并提供`main.go`。
+
+# Pkg目录介绍
+
+- ecode 错误码定义
+- exporter csv文件导出助手
+- grace 优雅的启动和关闭
+- i18n 国际化
+- logger 日志
+- middleware 中间件
+- queue 队列助手
+- queworker 队列worker
+- worker 管理器
