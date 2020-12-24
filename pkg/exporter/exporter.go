@@ -46,20 +46,24 @@ func (c *Exporter) Append(data []string) {
 
 // 写入Csv并返回文件
 func (c *Exporter) WriteAllSeekZero() (*os.File, error) {
-	err := c.writeAll()
+	err := c.WriteAll()
 	if err != nil {
 		return nil, err
 	}
 	return c.seekZero()
 }
 
-// 写入
-func (c *Exporter) writeAll() error {
-	err := c.writer.WriteAll(c.data)
-	if err != nil {
-		return err
+// 将data全部写入文件中
+// 写入成功将清除data以减少内存占用
+func (c *Exporter) WriteAll() error {
+	if len(c.data) > 0 {
+		err := c.writer.WriteAll(c.data)
+		if err != nil {
+			return err
+		}
+		c.writer.Flush()
+		c.data = nil
 	}
-	c.writer.Flush()
 	return nil
 }
 
