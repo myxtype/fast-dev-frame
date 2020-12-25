@@ -61,7 +61,6 @@ func (c *Exporter) WriteAll() error {
 		if err != nil {
 			return err
 		}
-		c.writer.Flush()
 		c.data = nil
 	}
 	return nil
