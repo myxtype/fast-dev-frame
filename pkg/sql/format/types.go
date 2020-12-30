@@ -36,12 +36,12 @@ func (t Map) Value() (driver.Value, error) {
 }
 
 // 字典数组
-type MapArray []Map
+type List []Map
 
-func (t *MapArray) Scan(src interface{}) error {
+func (t *List) Scan(src interface{}) error {
 	return Scan(t, src)
 }
 
-func (t MapArray) Value() (driver.Value, error) {
+func (t List) Value() (driver.Value, error) {
 	return Value(t)
 }
