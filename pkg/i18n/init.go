@@ -25,6 +25,6 @@ func init() {
 }
 
 // 通过全局的i18n获取翻译
-func Get(lang, key string) string {
-	return def.Get(lang, key)
+func Get(lang, key string, args ...Options) string {
+	return def.Get(lang, key, args...)
 }
