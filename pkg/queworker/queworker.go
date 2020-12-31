@@ -10,7 +10,6 @@ import (
 
 type QueueWorkerHandler interface {
 	Handle(job *queue.QueueJob)
-	Wait()
 }
 
 type QueueWorker struct {

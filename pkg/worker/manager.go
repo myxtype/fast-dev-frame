@@ -1,10 +1,12 @@
 package worker
 
-import "sync"
+import (
+	"frame/pkg/logger"
+	"sync"
+)
 
 type WorkerManager struct {
 	sync.WaitGroup
-	// 保存所有worker
 	WorkerSlice []Worker
 }
 
@@ -25,7 +27,7 @@ func (wm *WorkerManager) Start() {
 			defer func() {
 				err := recover()
 				if err != nil {
-					// todo
+					logger.Sugar.Error(err)
 				}
 			}()
 			w.Start()
@@ -39,7 +41,7 @@ func (wm *WorkerManager) Stop() {
 			defer func() {
 				err := recover()
 				if err != nil {
-					// todo
+					logger.Sugar.Error(err)
 				}
 			}()
 

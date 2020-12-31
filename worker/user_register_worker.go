@@ -19,8 +19,3 @@ func (handler *UserRegisterHandler) Handle(job *queue.QueueJob) {
 	logger.Sugar.Info(id)
 	time.Sleep(time.Second)
 }
-
-// 可能需要等待未完成的任务
-func (handler *UserRegisterHandler) Wait() {
-	// todo
-}
