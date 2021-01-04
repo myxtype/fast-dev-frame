@@ -40,7 +40,7 @@ func (i *I18n) Get(lang, key string, args ...Options) string {
 	if values, ok := i.data[lang]; ok {
 		if val, ok := values[key]; ok {
 			if len(args) > 0 {
-				return i.formatOptions(val, args[0])
+				return formatOptions(val, args[0])
 			}
 			return val
 		}
@@ -49,7 +49,7 @@ func (i *I18n) Get(lang, key string, args ...Options) string {
 }
 
 // 格式化参数
-func (i *I18n) formatOptions(val string, ops Options) string {
+func formatOptions(val string, ops Options) string {
 	for key, n := range ops {
 		val = strings.Replace(val, "{{"+key+"}}", cast.ToString(n), -1)
 	}
