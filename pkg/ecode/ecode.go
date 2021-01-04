@@ -46,7 +46,6 @@ type Errors interface {
 type Error struct {
 	code    int
 	message string
-	formats []interface{}
 }
 
 func (e Error) Error() string {
@@ -54,19 +53,11 @@ func (e Error) Error() string {
 }
 
 func (e Error) Message() string {
-	if len(e.formats) > 0 {
-		return fmt.Sprintf(e.message, e.formats...)
-	}
 	return e.message
 }
 
 func (e Error) Reload(message string) Error {
 	e.message = message
-	return e
-}
-
-func (e Error) Formats(formats ...interface{}) error {
-	e.formats = formats
 	return e
 }
 
