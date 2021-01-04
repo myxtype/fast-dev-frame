@@ -8,5 +8,7 @@ func TestNewI18n(t *testing.T) {
 	i.SetValue("zh_CN", "title2", "{{name}}，{{name}}，你好吗！！")
 
 	t.Log(i.Get("zh_CN", "title", Options{"name": "阿狸"}))
+	t.Log(i.Get("zh_CN", "title", Options{"name": 33442}))
 	t.Log(i.Get("zh_CN", "title2", Options{"name": "阿狸"}))
+	t.Log(i.Get("zh_CN", "title2"))
 }
