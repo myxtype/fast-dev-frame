@@ -15,13 +15,14 @@ type serverConfig struct {
 
 // 数据库配置
 type dataSourceConfig struct {
-	Addr     string // 地址
-	Database string // 数据库
-	User     string // 用户
-	Password string // 密码
-	MaxIdle  int    // 最大空闲数
-	MaxOpen  int    // 最大连接数
-	Migrate  bool   // 是否执行迁移
+	Addr        string // 地址
+	Database    string // 数据库
+	User        string // 用户
+	Password    string // 密码
+	MaxIdle     int    // 最大空闲数
+	MaxOpen     int    // 最大连接数
+	Migrate     bool   // 是否执行迁移
+	LogDisabled bool   // 是否禁用SQL日志
 }
 
 // Redis配置
