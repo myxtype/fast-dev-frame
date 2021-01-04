@@ -12,3 +12,17 @@ func TestNewI18n(t *testing.T) {
 	t.Log(i.Get("zh_CN", "title2", Options{"name": "阿狸"}))
 	t.Log(i.Get("zh_CN", "title2"))
 }
+
+func TestNewI18n2(t *testing.T) {
+	i := NewI18n(map[string]map[string]string{
+		"zh_CN": {
+			"title":  "{{name}}，你好啊！",
+			"title2": "{{name}}，{{name}}，你好吗！！",
+		},
+	})
+
+	t.Log(i.Get("zh_CN", "title", Options{"name": "阿狸"}))
+	t.Log(i.Get("zh_CN", "title", Options{"name": 33442}))
+	t.Log(i.Get("zh_CN", "title2", Options{"name": "阿狸"}))
+	t.Log(i.Get("zh_CN", "title2"))
+}
