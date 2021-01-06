@@ -2,10 +2,18 @@ package conf
 
 // 全局配置
 type gbeConfig struct {
+	Logger      loggerConfig
 	RestServer  serverConfig
 	AdminServer serverConfig
 	DataSource  dataSourceConfig
 	Redis       redisConfig
+}
+
+// 日志配置
+type loggerConfig struct {
+	Level    string // 打印日志的等级 debug/info/warn/error/panic/fatal
+	Target   string // 日志打印目标："file" or "console"
+	Filename string // 日志文件
 }
 
 // 接口服务配置

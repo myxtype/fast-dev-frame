@@ -23,6 +23,8 @@ func init() {
 
 func GetConfig() *gbeConfig {
 	configOnce.Do(func() {
+		flag.Parse() // 解析参数
+
 		viper.SetConfigName("config") // 配置文件名称
 		viper.SetConfigType("toml")   // 配置文件类型
 		if configPath == "" {
@@ -30,6 +32,8 @@ func GetConfig() *gbeConfig {
 				for _, n := range p {
 					viper.AddConfigPath(n)
 				}
+			} else {
+				panic(err)
 			}
 		} else {
 			viper.AddConfigPath(configPath)
@@ -41,7 +45,7 @@ func GetConfig() *gbeConfig {
 		viper.WatchConfig()
 		viper.OnConfigChange(func(e fsnotify.Event) {
 			if err := viper.Unmarshal(&config); err != nil {
-				log.Println("reload config error", err)
+				log.Println("Reload config error", err)
 			}
 		})
 		if err := viper.Unmarshal(&config); err != nil {

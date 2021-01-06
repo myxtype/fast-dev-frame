@@ -1,17 +1,12 @@
 package logger
 
 import (
+	"frame/conf"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	v2 "gopkg.in/natefinch/lumberjack.v2"
 	"os"
 	"time"
-)
-
-const (
-	level    = zap.InfoLevel    // 打印日志的等级
-	target   = "console"        // 日志打印目标："file" or "console"
-	filename = "log/stream.log" // 存放日志的文件
 )
 
 var (
@@ -41,24 +36,50 @@ func timeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 
 func init() {
 	var writer zapcore.WriteSyncer
-	switch target {
+
+	cfg := conf.GetConfig()
+	switch cfg.Logger.Target {
 	case "console":
 		writer = zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout))
 	case "file":
 		w := zapcore.AddSync(&v2.Logger{
-			Filename:   filename,
-			MaxSize:    10, // 10 MB
+			Filename:   cfg.Logger.Filename,
+			MaxSize:    50, // single file max 10 MB
 			MaxBackups: 0,  // keep all
-			MaxAge:     7,  // keep 7 days
+			MaxAge:     30, // keep 30 days
 		})
 		writer = zapcore.NewMultiWriteSyncer(w)
+	default:
+		writer = zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout))
 	}
 
 	core := zapcore.NewCore(zapcore.NewConsoleEncoder(newEncoderConfig()),
 		writer,
-		level,
+		resolveLevel(cfg.Logger.Level),
 	)
 
 	Logger = zap.New(core, zap.AddCaller())
 	Sugar = Logger.Sugar()
+}
+
+// 决定打印日志的等级
+func resolveLevel(l string) zapcore.Level {
+	switch l {
+	case "debug":
+		return zap.DebugLevel
+	case "info":
+		return zap.InfoLevel
+	case "warn":
+		return zap.WarnLevel
+	case "error":
+		return zap.ErrorLevel
+	case "dpanic":
+		return zap.DPanicLevel
+	case "panic":
+		return zap.PanicLevel
+	case "fatal":
+		return zap.FatalLevel
+	default:
+		return zap.DebugLevel
+	}
 }

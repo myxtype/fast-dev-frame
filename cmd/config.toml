@@ -2,6 +2,12 @@
 # 需要哪些配置看conf/config.go
 ##################################
 
+# 日志配置
+[Logger]
+Level = "debug"
+Target = "console"
+Filename = "./log/stream.log"
+
 # Rest服务配置
 [RestServer]
 Addr = "127.0.0.1:8000"
