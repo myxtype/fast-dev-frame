@@ -12,12 +12,13 @@ var (
 
 // New Error
 func New(code int, msg string) Error {
-	if code < 0 {
-		panic("error code must be greater than zero")
+	if code < 1000 {
+		panic("error code must be greater than 1000")
 	}
 	return add(code, msg)
 }
 
+// add only inner error
 func add(code int, msg string) Error {
 	if _, ok := codes[code]; ok {
 		panic(fmt.Sprintf("ecode: %d already exist", code))
