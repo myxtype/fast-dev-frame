@@ -8,18 +8,46 @@
 ./main -conf = /root
 ```
 
-就会读取`/root/config.toml`文件，需要在入口处执行`flag.Parse()`。
+就会读取`/root/config.toml`文件。
 
 # 配置示例
 
 config.toml
+
 ```toml
 # 配置文件
-##########################
+# 需要哪些配置看conf/config.go
+##################################
 
-# Rest服务
+# 日志配置
+[Logger]
+Level = "debug"
+Target = "console"
+Filename = "./log/stream.log"
+
+# Rest服务配置
 [RestServer]
 Addr = "127.0.0.1:8000"
+
+# Admin服务配置
+[AdminServer]
+Addr = "127.0.0.1:8001"
+
+# 数据库配置
+[DataSource]
+Addr = "127.0.0.1:3600"
+Database = "frame"
+User = "root"
+Password = "ZEvmL3rFpRXd6BIX"
+MaxIdle = 10
+MaxOpen = 100
+Migrate = false
+
+# Redis配置
+[Redis]
+Addr = "127.0.0.1:6379"
+Password = ""
+DB = 0
 ```
 
 # 功能
