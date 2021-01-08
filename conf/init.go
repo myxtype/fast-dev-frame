@@ -44,8 +44,10 @@ func GetConfig() *gbeConfig {
 		// 设置配置文件监听
 		viper.WatchConfig()
 		viper.OnConfigChange(func(e fsnotify.Event) {
-			if err := viper.Unmarshal(&config); err != nil {
-				log.Println("Reload config error", err)
+			if e.Op != fsnotify.Remove {
+				if err := viper.Unmarshal(&config); err != nil {
+					log.Println("Reload config error", err)
+				}
 			}
 		})
 		if err := viper.Unmarshal(&config); err != nil {
