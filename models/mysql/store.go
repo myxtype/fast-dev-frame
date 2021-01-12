@@ -1,7 +1,6 @@
 package mysql
 
 import (
-	"fmt"
 	"frame/conf"
 	"frame/models"
 	"gorm.io/driver/mysql"
@@ -36,19 +35,15 @@ func NewStore(db *gorm.DB) *Store {
 }
 
 func initDb() error {
-	cfg := conf.GetConfig()
-	dsn := fmt.Sprintf("%v:%v@tcp(%v)/%v?charset=utf8mb4&parseTime=True&loc=Local", cfg.DataSource.User, cfg.DataSource.Password, cfg.DataSource.Addr, cfg.DataSource.Database)
+	cfg := conf.GetConfig().DataSource
 
 	c := &gorm.Config{}
-	if cfg.DataSource.LogDisabled {
+	if cfg.LogDisabled {
 		c.Logger = logger.Discard
 	}
 
 	// 打开数据库
-	gdb, err := gorm.Open(mysql.New(mysql.Config{
-		DSN:               dsn,
-		DefaultStringSize: 256, // string 类型字段的默认长度
-	}), c)
+	gdb, err := gorm.Open(mysql.New(mysql.Config{DSN: cfg.DSN, DefaultStringSize: 256}), c)
 	if err != nil {
 		return err
 	}
@@ -59,18 +54,20 @@ func initDb() error {
 	}
 
 	// 设置空闲连接池中连接的最大数量
-	if cfg.DataSource.MaxIdle > 0 {
-		sqlDB.SetMaxIdleConns(cfg.DataSource.MaxIdle)
+	if cfg.MaxIdle > 0 {
+		sqlDB.SetMaxIdleConns(cfg.MaxIdle)
 	}
 	// 设置打开数据库连接的最大数量
-	if cfg.DataSource.MaxOpen > 0 {
-		sqlDB.SetMaxOpenConns(cfg.DataSource.MaxOpen)
+	if cfg.MaxOpen > 0 {
+		sqlDB.SetMaxOpenConns(cfg.MaxOpen)
 	}
 	// 设置连接可复用的最大时间
-	sqlDB.SetConnMaxLifetime(5 * time.Minute)
+	if cfg.MaxLifetime > 0 {
+		sqlDB.SetConnMaxLifetime(cfg.MaxLifetime * time.Second)
+	}
 
 	// 迁移
-	if cfg.DataSource.Migrate {
+	if cfg.Migrate {
 		gdb.AutoMigrate(&models.User{})
 		gdb.AutoMigrate(&models.AdminUser{})
 	}

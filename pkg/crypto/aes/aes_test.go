@@ -1,6 +1,8 @@
 package aes
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestEncryptToHex(t *testing.T) {
 	key := []byte("2qagBhx4gh6zF0sK")

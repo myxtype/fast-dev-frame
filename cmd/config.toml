@@ -18,12 +18,10 @@ Addr = "127.0.0.1:8001"
 
 # 数据库配置
 [DataSource]
-Addr = "127.0.0.1:3600"
-Database = "frame"
-User = "root"
-Password = "ZEvmL3rFpRXd6BIX"
-MaxIdle = 10
+DSN = "root:ZEvmL3rFpRXd6BIX@tcp(127.0.0.1:3306)/frame?charset=utf8mb4&parseTime=True&loc=Local"
+MaxIdle = 20
 MaxOpen = 100
+MaxLifetime = 600
 Migrate = false
 
 # Redis配置

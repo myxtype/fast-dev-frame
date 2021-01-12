@@ -1,5 +1,7 @@
 package conf
 
+import "time"
+
 // 全局配置
 type gbeConfig struct {
 	Logger      loggerConfig
@@ -23,14 +25,12 @@ type serverConfig struct {
 
 // 数据库配置
 type dataSourceConfig struct {
-	Addr        string // 地址
-	Database    string // 数据库
-	User        string // 用户
-	Password    string // 密码
-	MaxIdle     int    // 最大空闲数
-	MaxOpen     int    // 最大连接数
-	Migrate     bool   // 是否执行迁移
-	LogDisabled bool   // 是否禁用SQL日志
+	DSN         string        // 数据库配置DSN：https://github.com/go-sql-driver/mysql#dsn-data-source-name
+	MaxIdle     int           // 最大空闲数
+	MaxOpen     int           // 最大连接数
+	MaxLifetime time.Duration // 复用的最大时间：秒
+	Migrate     bool          // 是否执行迁移
+	LogDisabled bool          // 是否禁用SQL日志
 }
 
 // Redis配置
