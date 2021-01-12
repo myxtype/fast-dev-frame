@@ -12,6 +12,7 @@ import (
 // Job 优雅的关闭
 func CronRun(c *cron.Cron, timeout time.Duration) {
 	c.Start()
+	logger.Logger.Info("Cron started")
 
 	// Wait for interrupt signal to gracefully shutdown the server with
 	// a timeout of 5 seconds.
