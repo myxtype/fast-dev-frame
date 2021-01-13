@@ -2,6 +2,7 @@ package rest
 
 import (
 	"frame/pkg/ecode"
+	"frame/pkg/response"
 	"frame/service"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cast"
@@ -14,11 +15,11 @@ func GetUserByUserId(ctx *gin.Context) {
 
 	user, err := service.UserService.GetUserById(id)
 	if err != nil {
-		ctx.JSON(http.StatusOK, NewResponseVo(err))
+		ctx.JSON(http.StatusOK, response.JSON(err))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, NewResponseVo(nil, NewUserVo(user)))
+	ctx.JSON(http.StatusOK, response.JSON(nil, NewUserVo(user)))
 }
 
 type UserRegisterRequest struct {
@@ -30,20 +31,20 @@ type UserRegisterRequest struct {
 func UserRegister(ctx *gin.Context) {
 	var req UserRegisterRequest
 	if err := ctx.BindJSON(&req); err != nil {
-		ctx.JSON(http.StatusOK, NewResponseVo(err))
+		ctx.JSON(http.StatusOK, response.JSON(err))
 		return
 	}
 
 	if len(req.Username) == 0 || len(req.Password) == 0 {
-		ctx.JSON(http.StatusOK, NewResponseVo(ecode.ErrRequest))
+		ctx.JSON(http.StatusOK, response.JSON(ecode.ErrRequest))
 		return
 	}
 
 	err := service.UserService.Register(req.Username, req.Password)
 	if err != nil {
-		ctx.JSON(http.StatusOK, NewResponseVo(err))
+		ctx.JSON(http.StatusOK, response.JSON(err))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, NewResponseVo(nil))
+	ctx.JSON(http.StatusOK, response.JSON(nil))
 }
