@@ -1,10 +1,10 @@
 package worker
 
 import (
-	"frame/models/redisdb"
 	"frame/pkg/grace"
 	"frame/pkg/queworker"
 	"frame/pkg/worker"
+	"frame/store/redisdb"
 )
 
 func StartWorker() {

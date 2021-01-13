@@ -9,8 +9,10 @@ import (
 	"sync"
 )
 
-var store *Store
-var storeOnce sync.Once
+var (
+	store *Store
+	once  sync.Once
+)
 
 type Store struct {
 	client *redis.Client
@@ -18,7 +20,7 @@ type Store struct {
 
 // 单例模式
 func Shared() *Store {
-	storeOnce.Do(func() {
+	once.Do(func() {
 		err := initDb()
 		if err != nil {
 			panic(err)
@@ -52,6 +54,11 @@ func NewStore(c *redis.Client) *Store {
 // 获取Redis客户端
 func (s *Store) DB() *redis.Client {
 	return s.client
+}
+
+// Redis健康检查
+func (s *Store) Ping() error {
+	return s.client.Ping(context.Background()).Err()
 }
 
 // 获取分布式锁对象

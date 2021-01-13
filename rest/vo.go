@@ -1,7 +1,7 @@
 package rest
 
 import (
-	"frame/models"
+	"frame/model"
 	"time"
 )
 
@@ -12,7 +12,7 @@ type UserVo struct {
 	Username  string    `json:"username"`
 }
 
-func NewUserVo(v *models.User) *UserVo {
+func NewUserVo(v *model.User) *UserVo {
 	return &UserVo{
 		ID:        v.ID,
 		CreatedAt: v.CreatedAt,

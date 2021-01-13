@@ -1,8 +1,8 @@
 package service
 
 import (
-	"frame/models"
-	"frame/models/mysql"
+	"frame/model"
+	"frame/store/mysql"
 )
 
 type userService struct{}
@@ -10,13 +10,13 @@ type userService struct{}
 var UserService = new(userService)
 
 // 获取用户
-func (s *userService) GetUserById(id int64) (*models.User, error) {
+func (s *userService) GetUserById(id int64) (*model.User, error) {
 	return mysql.Shared().GetUserById(id)
 }
 
 // 注册
 func (s *userService) Register(username, password string) error {
-	user := &models.User{
+	user := &model.User{
 		Username: username,
 		Password: password,
 	}

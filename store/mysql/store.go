@@ -2,7 +2,7 @@ package mysql
 
 import (
 	"frame/conf"
-	"frame/models"
+	"frame/model"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -10,8 +10,10 @@ import (
 	"time"
 )
 
-var store *Store
-var storeOnce sync.Once
+var (
+	store *Store
+	once  sync.Once
+)
 
 type Store struct {
 	db *gorm.DB
@@ -19,7 +21,7 @@ type Store struct {
 
 // 单例模式
 func Shared() *Store {
-	storeOnce.Do(func() {
+	once.Do(func() {
 		err := initDb()
 		if err != nil {
 			panic(err)
@@ -68,8 +70,8 @@ func initDb() error {
 
 	// 迁移
 	if cfg.Migrate {
-		gdb.AutoMigrate(&models.User{})
-		gdb.AutoMigrate(&models.AdminUser{})
+		gdb.AutoMigrate(&model.User{})
+		gdb.AutoMigrate(&model.AdminUser{})
 	}
 
 	store = NewStore(gdb)
@@ -94,4 +96,13 @@ func (s *Store) Rollback() error {
 // 提交
 func (s *Store) Commit() error {
 	return s.db.Commit().Error
+}
+
+// 数据库健康检查
+func (s *Store) Ping() error {
+	db, err := s.db.DB()
+	if err != nil {
+		return err
+	}
+	return db.Ping()
 }
