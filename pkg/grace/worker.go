@@ -9,8 +9,8 @@ import (
 )
 
 // Worker 优雅的关闭
-func WorkerRun(wm *worker.WorkerManager) {
-	wm.Start()
+func WorkerRun(m *worker.WorkerManager) {
+	m.Start()
 	logger.Logger.Info("All worker started")
 
 	quit := make(chan os.Signal)
@@ -18,8 +18,8 @@ func WorkerRun(wm *worker.WorkerManager) {
 	<-quit
 	logger.Logger.Info("Shutting down worker...")
 
-	wm.Stop()
-	wm.Wait()
+	m.Stop()
+	m.Wait()
 
 	logger.Logger.Info("Shut down worker ok")
 }

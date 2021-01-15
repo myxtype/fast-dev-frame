@@ -8,11 +8,11 @@ import (
 )
 
 func StartWorker() {
-	wm := worker.NewWorkerManager()
+	m := worker.NewWorkerManager()
 
 	// 用户注册成功后的消息
-	wm.AddWorker(queworker.NewQueueWorker(redisdb.Shared().NewQueue("registered"), &UserRegisterHandler{}))
+	m.AddWorker(queworker.NewQueueWorker(redisdb.Shared().NewQueue("registered"), &UserRegisterHandler{}))
 	// To add more here
 
-	grace.WorkerRun(wm)
+	grace.WorkerRun(m)
 }

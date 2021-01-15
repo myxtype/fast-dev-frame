@@ -6,23 +6,27 @@ import (
 )
 
 type WorkerManager struct {
-	sync.WaitGroup
+	sw          *sync.WaitGroup
 	WorkerSlice []Worker
 }
 
 func NewWorkerManager() *WorkerManager {
-	workerManager := WorkerManager{}
+	workerManager := WorkerManager{
+		sw: &sync.WaitGroup{},
+	}
 	workerManager.WorkerSlice = make([]Worker, 0, 10)
 	return &workerManager
 }
 
-func (wm *WorkerManager) AddWorker(w Worker) {
-	wm.WorkerSlice = append(wm.WorkerSlice, w)
+// 添加Worker
+func (m *WorkerManager) AddWorker(w Worker) {
+	m.WorkerSlice = append(m.WorkerSlice, w)
 }
 
-func (wm *WorkerManager) Start() {
-	wm.Add(len(wm.WorkerSlice))
-	for _, worker := range wm.WorkerSlice {
+// 全部开始
+func (m *WorkerManager) Start() {
+	m.sw.Add(len(m.WorkerSlice))
+	for _, worker := range m.WorkerSlice {
 		go func(w Worker) {
 			defer func() {
 				err := recover()
@@ -35,18 +39,19 @@ func (wm *WorkerManager) Start() {
 	}
 }
 
-func (wm *WorkerManager) Stop() {
-	for _, worker := range wm.WorkerSlice {
+// 全部结束
+func (m *WorkerManager) Stop() {
+	for _, worker := range m.WorkerSlice {
 		go func(w Worker) {
 			defer func() {
-				err := recover()
-				if err != nil {
-					logger.Sugar.Error(err)
-				}
+				m.sw.Done()
 			}()
-
 			w.Stop()
-			wm.Done()
 		}(worker)
 	}
+}
+
+// 等待全部结束
+func (m *WorkerManager) Wait() {
+	m.sw.Wait()
 }
