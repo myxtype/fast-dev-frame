@@ -2,6 +2,7 @@ package service
 
 import (
 	"frame/model"
+	"frame/pkg/sql/types"
 	"frame/store/mysql"
 )
 
@@ -18,7 +19,7 @@ func (s *userService) GetUserById(id int64) (*model.User, error) {
 func (s *userService) Register(username, password string) error {
 	user := &model.User{
 		Username: username,
-		Password: password,
+		Password: types.NewPassword(password),
 	}
 
 	return mysql.Shared().AddUser(user)
