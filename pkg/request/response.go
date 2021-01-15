@@ -1,4 +1,4 @@
-package app
+package request
 
 import (
 	"frame/pkg/ecode"
@@ -12,7 +12,7 @@ type ResponseJSON struct {
 	Data    interface{} `json:"data,omitempty"`
 }
 
-func (a *App) Response(err error, args ...interface{}) {
+func (a *AppRequest) Response(err error, args ...interface{}) {
 	var data interface{}
 	if len(args) > 0 {
 		data = args[0]
