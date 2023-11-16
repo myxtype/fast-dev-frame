@@ -1,6 +1,6 @@
 .PHONY: build clean zip all
 
-CMDs := rest job worker admin
+CMDs := rest job worker admin pushing
 
 build-linux:
 	@for var in $(CMDs); do \
