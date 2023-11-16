@@ -2,7 +2,7 @@ package main
 
 import (
 	"frame/conf"
-	"frame/rest"
+	"frame/internal/rest"
 )
 
 func main() {

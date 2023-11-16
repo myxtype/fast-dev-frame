@@ -1,8 +1,8 @@
 package main
 
 import (
-	"frame/admin"
 	"frame/conf"
+	"frame/internal/admin"
 )
 
 func main() {

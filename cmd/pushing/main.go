@@ -1,6 +1,8 @@
 package main
 
-import "frame/pushing"
+import (
+	"frame/internal/pushing"
+)
 
 func main() {
 	pushing.Start()

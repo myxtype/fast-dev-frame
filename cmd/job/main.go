@@ -1,7 +1,7 @@
 package main
 
 import (
-	"frame/job"
+	"frame/internal/job"
 )
 
 func main() {
