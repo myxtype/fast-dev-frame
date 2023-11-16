@@ -12,7 +12,7 @@ type ResponseJSON struct {
 	Data    interface{} `json:"data,omitempty"`
 }
 
-func (a *AppRequest) Response(err error, args ...interface{}) {
+func (a *AppRequest) Done(err error, args ...interface{}) {
 	var data interface{}
 	if len(args) > 0 {
 		data = args[0]
@@ -26,7 +26,7 @@ func (a *AppRequest) Response(err error, args ...interface{}) {
 	})
 }
 
-func (a *AppRequest) AbortResponse(err error, args ...interface{}) {
+func (a *AppRequest) Error(err error) {
 	a.c.Abort()
-	a.Response(err, args...)
+	a.Done(err)
 }

@@ -18,7 +18,7 @@ func (c *AdminController) Current(ctx *gin.Context) {
 
 	user := app.GetAdminUser()
 	time.Sleep(time.Second)
-	app.Response(nil, NewAdminUserInfoVo(user))
+	app.Done(nil, NewAdminUserInfoVo(user))
 }
 
 type AdminUpdatePasswordRequest struct {
@@ -31,17 +31,17 @@ func (c *AdminController) UpdatePassword(ctx *gin.Context) {
 
 	var req AdminUpdatePasswordRequest
 	if err := ctx.Bind(&req); err != nil {
-		app.Response(err)
+		app.Done(err)
 		return
 	}
 
 	admin := app.GetAdminUser()
 	if !admin.Password.Check(req.OldPassword) {
-		app.Response(errors.New("账号密码错误"))
+		app.Done(errors.New("账号密码错误"))
 		return
 	}
 
-	app.Response(service.AdminService.UpdatePassword(ctx, admin, req.NewPassword))
+	app.Done(service.AdminService.UpdatePassword(ctx, admin, req.NewPassword))
 }
 
 type QueryAdminUsersRequest struct {
@@ -56,13 +56,13 @@ func (c *AdminController) QueryAdminUsers(ctx *gin.Context) {
 
 	var req QueryAdminUsersRequest
 	if err := ctx.Bind(&req); err != nil {
-		app.Response(err)
+		app.Done(err)
 		return
 	}
 
 	data, count, err := service.AdminService.QueryAdminUsers(ctx, req.ID, req.RoleId, req.Username, req.Page, req.Limit)
 	if err != nil {
-		app.Response(err)
+		app.Done(err)
 		return
 	}
 
@@ -71,7 +71,7 @@ func (c *AdminController) QueryAdminUsers(ctx *gin.Context) {
 		vos = append(vos, NewAdminUserVo(n))
 	}
 
-	app.Response(err, NewListResult(count, vos))
+	app.Done(err, NewListResult(count, vos))
 }
 
 type QueryAdminRolesRequest struct {
@@ -83,13 +83,13 @@ func (c *AdminController) QueryAdminRoles(ctx *gin.Context) {
 
 	var req QueryAdminRolesRequest
 	if err := ctx.Bind(&req); err != nil {
-		app.Response(err)
+		app.Done(err)
 		return
 	}
 
 	data, count, err := service.AdminService.QueryAdminRoles(ctx, req.Page, req.Limit)
 	if err != nil {
-		app.Response(err)
+		app.Done(err)
 		return
 	}
 
@@ -98,7 +98,7 @@ func (c *AdminController) QueryAdminRoles(ctx *gin.Context) {
 		vos = append(vos, NewAdminRoleVo(n))
 	}
 
-	app.Response(nil, NewListResult(count, vos))
+	app.Done(nil, NewListResult(count, vos))
 }
 
 type SaveAdminUserRequest struct {
@@ -116,7 +116,7 @@ func (c *AdminController) SaveAdminUser(ctx *gin.Context) {
 
 	var req SaveAdminUserRequest
 	if err := ctx.Bind(&req); err != nil {
-		app.Response(err)
+		app.Done(err)
 		return
 	}
 
@@ -126,17 +126,17 @@ func (c *AdminController) SaveAdminUser(ctx *gin.Context) {
 		var err error
 		user, err = service.AdminService.GetAdminByID(ctx, req.ID)
 		if err != nil {
-			app.Response(err)
+			app.Done(err)
 			return
 		}
 		if user == nil {
-			app.Response(ecode.ErrNotFind)
+			app.Done(ecode.ErrNotFind)
 			return
 		}
 	} else {
 		user = &model.AdminUser{}
 		if req.Password == "" {
-			app.Response(errors.New("请输入登录密码"))
+			app.Done(errors.New("请输入登录密码"))
 			return
 		}
 	}
@@ -151,7 +151,7 @@ func (c *AdminController) SaveAdminUser(ctx *gin.Context) {
 	}
 
 	err := service.AdminService.SaveAdminUser(ctx, user)
-	app.Response(err)
+	app.Done(err)
 }
 
 type SaveAdminRoleRequest struct {
@@ -166,7 +166,7 @@ func (c *AdminController) SaveAdminRole(ctx *gin.Context) {
 
 	var req SaveAdminRoleRequest
 	if err := ctx.Bind(&req); err != nil {
-		app.Response(err)
+		app.Done(err)
 		return
 	}
 
@@ -175,11 +175,11 @@ func (c *AdminController) SaveAdminRole(ctx *gin.Context) {
 		var err error
 		role, err = service.AdminService.GetAdminRoleByID(ctx, req.ID)
 		if err != nil {
-			app.Response(err)
+			app.Done(err)
 			return
 		}
 		if role == nil {
-			app.Response(ecode.ErrNotFind)
+			app.Done(ecode.ErrNotFind)
 			return
 		}
 	} else {
@@ -191,5 +191,5 @@ func (c *AdminController) SaveAdminRole(ctx *gin.Context) {
 	role.Disabled = req.Disabled
 
 	err := service.AdminService.SaveAdminRole(ctx, role)
-	app.Response(err)
+	app.Done(err)
 }

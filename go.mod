@@ -5,6 +5,7 @@ go 1.15
 require (
 	github.com/bsm/redislock v0.9.4
 	github.com/fsnotify/fsnotify v1.6.0
+	github.com/gin-contrib/cache v1.2.0 // indirect
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-redis/redis/v8 v8.11.5

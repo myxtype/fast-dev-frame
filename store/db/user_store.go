@@ -14,7 +14,7 @@ func (s *Store) UpdateUser(ctx context.Context, user *model.User) error {
 	return s.db.WithContext(ctx).Save(user).Error
 }
 
-func (s *Store) GetUserByID(ctx context.Context, id int64) (*model.User, error) {
+func (s *Store) GetUserByID(ctx context.Context, id uint) (*model.User, error) {
 	var user model.User
 	err := s.db.WithContext(ctx).First(&user, id).Error
 	if err == gorm.ErrRecordNotFound {

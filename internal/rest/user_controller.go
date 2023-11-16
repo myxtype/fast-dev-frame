@@ -5,27 +5,35 @@ import (
 	"frame/pkg/request"
 	"frame/service"
 	"github.com/gin-gonic/gin"
-	"github.com/spf13/cast"
 )
 
-// 获取用户数据
-func GetUserByUserId(ctx *gin.Context) {
+type UserController struct{}
+
+type GetUserRequest struct {
+	ID uint `json:"id" form:"id"`
+}
+
+func (*UserController) GetUser(ctx *gin.Context) {
 	app := request.New(ctx)
 
-	id := cast.ToInt64(ctx.Query("id"))
+	var req GetUserRequest
+	if err := ctx.ShouldBind(&req); err != nil {
+		app.Error(err)
+		return
+	}
 
-	user, err := service.UserService.GetUserByID(ctx, id)
+	user, err := service.UserService.GetUserByID(ctx, req.ID)
 	if err != nil {
-		app.Response(err)
+		app.Error(err)
 		return
 	}
 
 	if user == nil {
-		app.Response(ecode.ErrNotFind)
+		app.Error(ecode.ErrNotFind)
 		return
 	}
 
-	app.Response(nil, NewUserVo(user))
+	app.Done(nil, NewUserVo(user))
 }
 
 type UserRegisterRequest struct {
@@ -33,26 +41,25 @@ type UserRegisterRequest struct {
 	Password string `json:"password"`
 }
 
-// 用户注册
-func UserRegister(ctx *gin.Context) {
+func (*UserController) UserRegister(ctx *gin.Context) {
 	app := request.New(ctx)
 
 	var req UserRegisterRequest
 	if err := ctx.BindJSON(&req); err != nil {
-		app.Response(err)
+		app.Done(err)
 		return
 	}
 
 	if len(req.Username) == 0 || len(req.Password) == 0 {
-		app.Response(ecode.ErrRequest)
+		app.Done(ecode.ErrRequest)
 		return
 	}
 
 	err := service.UserService.Register(ctx, req.Username, req.Password)
 	if err != nil {
-		app.Response(err)
+		app.Done(err)
 		return
 	}
 
-	app.Response(nil)
+	app.Done(nil)
 }

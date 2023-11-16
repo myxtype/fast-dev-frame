@@ -8,8 +8,7 @@ import (
 	"time"
 )
 
-type AuthController struct {
-}
+type AuthController struct{}
 
 type AuthLoginRequest struct {
 	Username string `json:"username" form:"username"`
@@ -21,40 +20,40 @@ func (c *AuthController) Login(ctx *gin.Context) {
 
 	var req AuthLoginRequest
 	if err := ctx.Bind(&req); err != nil {
-		app.Response(err)
+		app.Done(err)
 		return
 	}
 
 	if req.Username == "" || req.Password == "" {
-		app.Response(ecode.ErrRequest)
+		app.Done(ecode.ErrRequest)
 		return
 	}
 
 	count, err := service.AdminService.GetAdminUserCount(ctx)
 	if err != nil {
-		app.Response(err)
+		app.Done(err)
 		return
 	}
 
 	if count == 0 {
 		if err := service.AdminService.InitAdmin(ctx); err != nil {
-			app.Response(err)
+			app.Done(err)
 			return
 		}
 	}
 
 	user, token, err := service.AdminService.Login(ctx, req.Username, req.Password)
 	if err != nil {
-		app.Response(err)
+		app.Done(err)
 		return
 	}
 
 	service.AdminService.AddLog(ctx, user.ID, "登录成功", ctx.ClientIP())
 
-	app.Response(nil, token)
+	app.Done(nil, token)
 }
 
 func (c *AuthController) OutLogin(ctx *gin.Context) {
 	time.Sleep(time.Second)
-	request.New(ctx).Response(nil)
+	request.New(ctx).Done(nil)
 }

@@ -14,13 +14,13 @@ func checkToken() gin.HandlerFunc {
 
 		token := ctx.GetHeader("X-Access-Token")
 		if token == "" {
-			app.AbortResponse(ecode.ErrAuth)
+			app.Error(ecode.ErrAuth)
 			return
 		}
 
 		user, err := service.AdminService.CheckToken(ctx, token)
 		if err != nil {
-			app.AbortResponse(err)
+			app.Error(err)
 			return
 		}
 
@@ -53,18 +53,18 @@ func permit(permit string) gin.HandlerFunc {
 
 		user := app.GetAdminUser()
 		if user == nil || user.RoleId <= 0 {
-			app.AbortResponse(ecode.ErrForbidden)
+			app.Error(ecode.ErrForbidden)
 			return
 		}
 
 		pass, err := service.AdminService.CheckAdminRole(ctx, user, permit)
 		if err != nil {
-			app.AbortResponse(err)
+			app.Error(err)
 			return
 		}
 
 		if !pass {
-			app.AbortResponse(ecode.ErrNoPermission)
+			app.Error(ecode.ErrNoPermission)
 			return
 		}
 
