@@ -50,22 +50,22 @@ func initDb() error {
 		return err
 	}
 
-	sdb, err := gdb.DB()
+	sqldb, err := gdb.DB()
 	if err != nil {
 		return err
 	}
 
 	// 设置空闲连接池中连接的最大数量
 	if cfg.MaxIdle > 0 {
-		sdb.SetMaxIdleConns(cfg.MaxIdle)
+		sqldb.SetMaxIdleConns(cfg.MaxIdle)
 	}
 	// 设置打开数据库连接的最大数量
 	if cfg.MaxOpen > 0 {
-		sdb.SetMaxOpenConns(cfg.MaxOpen)
+		sqldb.SetMaxOpenConns(cfg.MaxOpen)
 	}
 	// 设置连接可复用的最大时间
 	if cfg.MaxLifetime > 0 {
-		sdb.SetConnMaxLifetime(cfg.MaxLifetime * time.Second)
+		sqldb.SetConnMaxLifetime(cfg.MaxLifetime * time.Second)
 	}
 
 	// 迁移

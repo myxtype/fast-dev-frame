@@ -13,7 +13,8 @@ func GetUserByUserId(ctx *gin.Context) {
 	app := request.New(ctx)
 
 	id := cast.ToInt64(ctx.Query("id"))
-	user, err := service.UserService.GetUserById(id)
+
+	user, err := service.UserService.GetUserByID(ctx, id)
 	if err != nil {
 		app.Response(err)
 		return
@@ -42,7 +43,7 @@ func UserRegister(ctx *gin.Context) {
 		return
 	}
 
-	err := service.UserService.Register(req.Username, req.Password)
+	err := service.UserService.Register(ctx, req.Username, req.Password)
 	if err != nil {
 		app.Response(err)
 		return
