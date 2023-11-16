@@ -33,7 +33,7 @@ func (*UserController) GetUser(ctx *gin.Context) {
 		return
 	}
 
-	app.Done(nil, NewUserVo(user))
+	app.Success(NewUserVo(user))
 }
 
 type UserRegisterRequest struct {
@@ -46,20 +46,20 @@ func (*UserController) UserRegister(ctx *gin.Context) {
 
 	var req UserRegisterRequest
 	if err := ctx.BindJSON(&req); err != nil {
-		app.Done(err)
+		app.Error(err)
 		return
 	}
 
 	if len(req.Username) == 0 || len(req.Password) == 0 {
-		app.Done(ecode.ErrRequest)
+		app.Error(ecode.ErrRequest)
 		return
 	}
 
 	err := service.UserService.Register(ctx, req.Username, req.Password)
 	if err != nil {
-		app.Done(err)
+		app.Error(err)
 		return
 	}
 
-	app.Done(nil)
+	app.Success(nil)
 }

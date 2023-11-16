@@ -2,7 +2,7 @@ package admin
 
 import (
 	"frame/pkg/grace"
-	"github.com/gin-contrib/cors"
+	"frame/pkg/middleware"
 	"github.com/gin-gonic/gin"
 	"io"
 	"time"
@@ -24,15 +24,9 @@ func (server *HttpServer) Start() {
 	gin.DefaultWriter = io.Discard
 
 	r := gin.Default()
-	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Accept", "Origin", "XRequestedWith", "Content-Type", "LastModified", "X-Access-Token", "X-Lang"},
-		AllowCredentials: true,
-		MaxAge:           365 * 24 * time.Hour,
-	}))
+	r.Use(middleware.Cors())
 
-	// 建议定一个特殊的前缀
+	// 管理后台：建议定一个特殊的前缀
 	x := r.Group("/x")
 	{
 		authGroup := x.Group("/auth")

@@ -2,9 +2,9 @@ package rest
 
 import (
 	"frame/pkg/grace"
+	"frame/pkg/middleware"
 	"github.com/gin-contrib/cache"
 	"github.com/gin-contrib/cache/persistence"
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"io"
 	"time"
@@ -29,14 +29,7 @@ func (server *HttpServer) Start() {
 	store := persistence.NewInMemoryStore(time.Second)
 
 	r := gin.Default()
-	// 跨域
-	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Accept", "Origin", "XRequestedWith", "Content-Type", "LastModified", "X-Access-Token", "X-Lang"},
-		AllowCredentials: true,
-		MaxAge:           365 * 24 * time.Hour,
-	}))
+	r.Use(middleware.Cors())
 
 	v1 := r.Group("/v1")
 	{

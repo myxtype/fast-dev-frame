@@ -20,40 +20,40 @@ func (c *AuthController) Login(ctx *gin.Context) {
 
 	var req AuthLoginRequest
 	if err := ctx.Bind(&req); err != nil {
-		app.Done(err)
+		app.Error(err)
 		return
 	}
 
 	if req.Username == "" || req.Password == "" {
-		app.Done(ecode.ErrRequest)
+		app.Error(ecode.ErrRequest)
 		return
 	}
 
 	count, err := service.AdminService.GetAdminUserCount(ctx)
 	if err != nil {
-		app.Done(err)
+		app.Error(err)
 		return
 	}
 
 	if count == 0 {
 		if err := service.AdminService.InitAdmin(ctx); err != nil {
-			app.Done(err)
+			app.Error(err)
 			return
 		}
 	}
 
 	user, token, err := service.AdminService.Login(ctx, req.Username, req.Password)
 	if err != nil {
-		app.Done(err)
+		app.Error(err)
 		return
 	}
 
 	service.AdminService.AddLog(ctx, user.ID, "登录成功", ctx.ClientIP())
 
-	app.Done(nil, token)
+	app.Success(token)
 }
 
 func (c *AuthController) OutLogin(ctx *gin.Context) {
 	time.Sleep(time.Second)
-	request.New(ctx).Done(nil)
+	request.New(ctx).Success(nil)
 }
