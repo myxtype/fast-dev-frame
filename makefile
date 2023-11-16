@@ -8,7 +8,7 @@ build:
   		GOOS=linux go build -o "./build/$${var}" "./cmd/$${var}"; \
     done
 
-build-local:
+buildlocal:
 	@for var in $(CMDs); do \
   		echo "building $${var}"; \
   		go build -o "./build/$${var}" "./cmd/$${var}"; \

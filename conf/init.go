@@ -13,7 +13,7 @@ import (
 
 var (
 	configPath string
-	config     gbeConfig
+	config     GbeConfig
 	configOnce sync.Once
 )
 
@@ -21,7 +21,7 @@ func init() {
 	flag.StringVar(&configPath, "conf", "", "Config file path. This path must include config.toml file.")
 }
 
-func GetConfig() *gbeConfig {
+func Get() *GbeConfig {
 	configOnce.Do(func() {
 		flag.Parse() // 解析参数
 

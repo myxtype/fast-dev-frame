@@ -1,4 +1,4 @@
-package redisdb
+package rdb
 
 import (
 	"context"
@@ -30,7 +30,7 @@ func Shared() *Store {
 }
 
 func initDb() error {
-	cfg := conf.GetConfig()
+	cfg := conf.Get()
 
 	client := redis.NewClient(&redis.Options{
 		Addr:     cfg.Redis.Addr,

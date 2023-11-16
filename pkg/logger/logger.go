@@ -37,7 +37,7 @@ func timeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 func init() {
 	var writer zapcore.WriteSyncer
 
-	cfg := conf.GetConfig()
+	cfg := conf.Get()
 	switch cfg.Logger.Target {
 	case "console":
 		writer = zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout))

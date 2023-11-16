@@ -37,7 +37,7 @@ func NewStore(db *gorm.DB) *Store {
 }
 
 func initDb() error {
-	cfg := conf.GetConfig().DataSource
+	cfg := conf.Get().DataSource
 
 	c := &gorm.Config{}
 	if cfg.LogDisabled {

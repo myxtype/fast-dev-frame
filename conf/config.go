@@ -3,7 +3,7 @@ package conf
 import "time"
 
 // 全局配置
-type gbeConfig struct {
+type GbeConfig struct {
 	Logger      loggerConfig
 	RestServer  serverConfig
 	AdminServer serverConfig
