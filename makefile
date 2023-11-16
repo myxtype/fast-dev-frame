@@ -19,6 +19,8 @@ clean:
 		if [ -f ./build/$$var ] ; then rm ./build/$$var* ; fi \
     done
 
+	@if [ -f ./build/cmd.zip ] ; then rm ./build/cmd.zip ; fi
+
 zip:
 	@for var in $(CMDs); do \
 		zip ./build/cmd.zip -jg ./build/$$var; \

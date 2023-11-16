@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// 用户表
+// User 用户表
 type User struct {
 	gorm.Model
 	Username string            `gorm:"uniqueIndex;size:255"` // 用户名

@@ -4,7 +4,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// 管理员操作日志
+// AdminLog 管理员操作日志
 type AdminLog struct {
 	gorm.Model
 	AdminId uint   `gorm:"index"` // 管理员ID

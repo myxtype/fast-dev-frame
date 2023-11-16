@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// 管理员角色
+// AdminRole 管理员角色
 type AdminRole struct {
 	gorm.Model
 	Name        string               // 角色名称

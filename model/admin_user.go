@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// 管理员
+// AdminUser 管理员
 type AdminUser struct {
 	gorm.Model
 	Username     string            `gorm:"uniqueIndex"`
