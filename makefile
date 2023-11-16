@@ -8,6 +8,12 @@ build:
   		GOOS=linux go build -o "./build/$${var}" "./cmd/$${var}"; \
     done
 
+build-local:
+	@for var in $(CMDs); do \
+  		echo "building $${var}"; \
+  		go build -o "./build/$${var}" "./cmd/$${var}"; \
+    done
+
 clean:
 	@for var in $(CMDs); do \
 		if [ -f ./build/$$var ] ; then rm ./build/$$var ; fi \

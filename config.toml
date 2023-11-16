@@ -1,0 +1,33 @@
+##################################
+# 配置文件
+# 需要哪些配置看conf/config.go
+##################################
+
+# 日志配置
+[Logger]
+Level = "debug"
+Target = "console"
+Filename = "./log/stream.log"
+
+# Rest服务配置
+[RestServer]
+Addr = "127.0.0.1:3000"
+
+# Admin服务配置
+[AdminServer]
+Addr = "127.0.0.1:3001"
+
+# 数据库配置
+[DataSource]
+DSN = "host=localhost user=postgres password=password dbname=openad port=5432 sslmode=disable"
+MaxIdle = 20
+MaxOpen = 100
+MaxLifetime = 600
+Migrate = true
+LogDisabled = true
+
+# Redis配置
+[Redis]
+Addr = "127.0.0.1:6379"
+Password = ""
+DB = 0
