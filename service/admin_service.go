@@ -8,7 +8,7 @@ import (
 	"frame/pkg/ecode"
 	"frame/pkg/jwttool"
 	"frame/pkg/sql/sqltypes"
-	"frame/pkg/str"
+	"frame/pkg/utils"
 	"frame/store/db"
 	"github.com/golang-jwt/jwt/v4"
 	"time"
@@ -138,11 +138,11 @@ func (s *adminService) CheckAdminRole(ctx context.Context, admin *model.AdminUse
 	}
 
 	// 全部权限
-	if str.Contains("*", role.Permissions) {
+	if utils.Contains("*", role.Permissions) {
 		return true, nil
 	}
 
-	return str.Contains(permit, role.Permissions), nil
+	return utils.Contains(permit, role.Permissions), nil
 }
 
 func (s *adminService) GetAdminByID(ctx context.Context, id uint) (*model.AdminUser, error) {
