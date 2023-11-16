@@ -25,3 +25,8 @@ func (a *AppRequest) Response(err error, args ...interface{}) {
 		Data:    data,
 	})
 }
+
+func (a *AppRequest) AbortResponse(err error, args ...interface{}) {
+	a.c.Abort()
+	a.Response(err, args...)
+}

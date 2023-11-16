@@ -19,7 +19,7 @@ Addr = "127.0.0.1:3001"
 
 # 数据库配置
 [DataSource]
-DSN = "host=localhost user=postgres password=password dbname=openad port=5432 sslmode=disable"
+DSN = "host=localhost user=postgres password=password dbname=test port=5432 sslmode=disable"
 MaxIdle = 20
 MaxOpen = 100
 MaxLifetime = 600

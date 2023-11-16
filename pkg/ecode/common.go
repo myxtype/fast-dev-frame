@@ -7,4 +7,5 @@ var (
 	ErrForbidden    = add(403, "请求被拒绝")
 	ErrNoPermission = add(405, "无权限")
 	ErrServer       = add(500, "服务器错误")
+	ErrAuth         = add(600, "认证错误")
 )

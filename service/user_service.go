@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"frame/model"
-	"frame/pkg/sql/types"
+	"frame/pkg/sql/sqltypes"
 	"frame/store/db"
 )
 
@@ -20,7 +20,7 @@ func (s *userService) GetUserByID(ctx context.Context, id int64) (*model.User, e
 func (s *userService) Register(ctx context.Context, username, password string) error {
 	user := &model.User{
 		Username: username,
-		Password: types.NewPassword(password),
+		Password: sqltypes.NewPassword(password),
 	}
 
 	return db.Shared().AddUser(ctx, user)

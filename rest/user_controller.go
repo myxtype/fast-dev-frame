@@ -20,6 +20,11 @@ func GetUserByUserId(ctx *gin.Context) {
 		return
 	}
 
+	if user == nil {
+		app.Response(ecode.ErrNotFind)
+		return
+	}
+
 	app.Response(nil, NewUserVo(user))
 }
 

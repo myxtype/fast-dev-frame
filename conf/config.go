@@ -4,11 +4,18 @@ import "time"
 
 // 全局配置
 type GbeConfig struct {
+	JwtSecret   jwtSecretConfig
 	Logger      loggerConfig
 	RestServer  serverConfig
 	AdminServer serverConfig
 	DataSource  dataSourceConfig
 	Redis       redisConfig
+}
+
+// JWT
+type jwtSecretConfig struct {
+	Admin string
+	Rest  string
 }
 
 // 日志配置

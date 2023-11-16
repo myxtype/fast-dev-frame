@@ -1,14 +1,14 @@
 .PHONY: build clean zip all
 
-CMDs := rest job worker
+CMDs := rest job worker admin
 
-build:
+build-linux:
 	@for var in $(CMDs); do \
   		echo "building $${var}"; \
   		GOOS=linux go build -o "./build/$${var}" "./cmd/$${var}"; \
     done
 
-buildlocal:
+build:
 	@for var in $(CMDs); do \
   		echo "building $${var}"; \
   		go build -o "./build/$${var}" "./cmd/$${var}"; \
@@ -16,7 +16,7 @@ buildlocal:
 
 clean:
 	@for var in $(CMDs); do \
-		if [ -f ./build/$$var ] ; then rm ./build/$$var ; fi \
+		if [ -f ./build/$$var ] ; then rm ./build/$$var* ; fi \
     done
 
 zip:
@@ -26,7 +26,7 @@ zip:
 
 all:
 	make clean
-	make build
+	make build-linux
 	make zip
 
 help:
