@@ -6,7 +6,7 @@ import (
 )
 
 type UserVo struct {
-	ID        int64     `json:"id"`
+	ID        uint      `json:"id"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
 	Username  string    `json:"username"`

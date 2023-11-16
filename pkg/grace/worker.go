@@ -8,7 +8,7 @@ import (
 	"syscall"
 )
 
-// Worker 优雅的关闭
+// WorkerRun 优雅地关闭
 func WorkerRun(m *worker.WorkerManager) {
 	m.Start()
 	logger.Logger.Info("All worker started")

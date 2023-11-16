@@ -1,9 +1,9 @@
-package mysql
+package db
 
 import (
 	"frame/conf"
 	"frame/model"
-	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"sync"
@@ -45,33 +45,33 @@ func initDb() error {
 	}
 
 	// 打开数据库
-	gdb, err := gorm.Open(mysql.New(mysql.Config{DSN: cfg.DSN, DefaultStringSize: 256}), c)
+	gdb, err := gorm.Open(postgres.New(postgres.Config{DSN: cfg.DSN}), c)
 	if err != nil {
 		return err
 	}
 
-	sqlDB, err := gdb.DB()
+	sdb, err := gdb.DB()
 	if err != nil {
 		return err
 	}
 
 	// 设置空闲连接池中连接的最大数量
 	if cfg.MaxIdle > 0 {
-		sqlDB.SetMaxIdleConns(cfg.MaxIdle)
+		sdb.SetMaxIdleConns(cfg.MaxIdle)
 	}
 	// 设置打开数据库连接的最大数量
 	if cfg.MaxOpen > 0 {
-		sqlDB.SetMaxOpenConns(cfg.MaxOpen)
+		sdb.SetMaxOpenConns(cfg.MaxOpen)
 	}
 	// 设置连接可复用的最大时间
 	if cfg.MaxLifetime > 0 {
-		sqlDB.SetConnMaxLifetime(cfg.MaxLifetime * time.Second)
+		sdb.SetConnMaxLifetime(cfg.MaxLifetime * time.Second)
 	}
 
 	// 迁移
 	if cfg.Migrate {
-		gdb.AutoMigrate(&model.User{})
 		gdb.AutoMigrate(&model.AdminUser{})
+		gdb.AutoMigrate(&model.User{})
 	}
 
 	store = NewStore(gdb)

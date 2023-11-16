@@ -5,7 +5,7 @@ import (
 	"frame/conf"
 	"frame/pkg/queue"
 	"github.com/bsm/redislock"
-	"github.com/go-redis/redis/v8"
+	"github.com/redis/go-redis/v9"
 	"sync"
 )
 

@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// Job 优雅的关闭
+// CronRun 优雅地关闭
 func CronRun(c *cron.Cron, timeout time.Duration) {
 	c.Start()
 	logger.Logger.Info("Cron started")

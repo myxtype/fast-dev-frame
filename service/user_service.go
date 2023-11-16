@@ -3,7 +3,7 @@ package service
 import (
 	"frame/model"
 	"frame/pkg/sql/types"
-	"frame/store/mysql"
+	"frame/store/db"
 )
 
 type userService struct{}
@@ -12,7 +12,7 @@ var UserService = new(userService)
 
 // 获取用户
 func (s *userService) GetUserById(id int64) (*model.User, error) {
-	return mysql.Shared().GetUserById(id)
+	return db.Shared().GetUserById(id)
 }
 
 // 注册
@@ -22,5 +22,5 @@ func (s *userService) Register(username, password string) error {
 		Password: types.NewPassword(password),
 	}
 
-	return mysql.Shared().AddUser(user)
+	return db.Shared().AddUser(user)
 }

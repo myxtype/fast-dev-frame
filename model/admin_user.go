@@ -1,13 +1,15 @@
 package model
 
-import "time"
+import (
+	"frame/pkg/sql/types"
+	"gorm.io/gorm"
+	"time"
+)
 
 // 管理员
 type AdminUser struct {
-	ID          int64 `gorm:"primaryKey;autoIncrement"`
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	gorm.Model
 	Username    string `gorm:"uniqueIndex;size:255"`
-	Password    string
+	Password    types.Password
 	LastLoginAt *time.Time
 }

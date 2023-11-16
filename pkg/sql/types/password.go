@@ -3,9 +3,8 @@ package types
 import (
 	"database/sql/driver"
 	"frame/pkg/crypto/md5"
-	"frame/pkg/crypto/rand"
+	"frame/pkg/randstr"
 	"frame/pkg/sql/format"
-	"github.com/spf13/cast"
 )
 
 type Password struct {
@@ -14,8 +13,8 @@ type Password struct {
 }
 
 func NewPassword(password string) Password {
-	salt := cast.ToString(rand.Int(10000000))
-	hash, _ := md5.EncryptString(salt + password)
+	salt := randstr.Hex(8)
+	hash := md5.MustEncryptString(salt + password)
 	return Password{
 		Hash: hash,
 		Salt: salt,
