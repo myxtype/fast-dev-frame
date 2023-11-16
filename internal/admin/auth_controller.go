@@ -16,7 +16,6 @@ type AuthLoginRequest struct {
 	Password string `json:"password" form:"password"`
 }
 
-// 登录
 func (c *AuthController) Login(ctx *gin.Context) {
 	app := request.New(ctx)
 
@@ -55,7 +54,6 @@ func (c *AuthController) Login(ctx *gin.Context) {
 	app.Response(nil, token)
 }
 
-// 退出登录
 func (c *AuthController) OutLogin(ctx *gin.Context) {
 	time.Sleep(time.Second)
 	request.New(ctx).Response(nil)

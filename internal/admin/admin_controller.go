@@ -13,7 +13,6 @@ import (
 
 type AdminController struct{}
 
-// 获取当前登录管理员
 func (c *AdminController) Current(ctx *gin.Context) {
 	app := request.New(ctx)
 
@@ -27,7 +26,6 @@ type AdminUpdatePasswordRequest struct {
 	NewPassword string `json:"newPassword"`
 }
 
-// 修改密码
 func (c *AdminController) UpdatePassword(ctx *gin.Context) {
 	app := request.New(ctx)
 
@@ -53,7 +51,6 @@ type QueryAdminUsersRequest struct {
 	RoleId   int64  `json:"roleId" form:"roleId"`
 }
 
-// QueryAdminUsers 查询管理员列表
 func (c *AdminController) QueryAdminUsers(ctx *gin.Context) {
 	app := request.New(ctx)
 
@@ -81,7 +78,6 @@ type QueryAdminRolesRequest struct {
 	PageRequest
 }
 
-// 查询管理员权限列表
 func (c *AdminController) QueryAdminRoles(ctx *gin.Context) {
 	app := request.New(ctx)
 
@@ -107,11 +103,11 @@ func (c *AdminController) QueryAdminRoles(ctx *gin.Context) {
 
 type SaveAdminUserRequest struct {
 	ID       uint   `json:"id"`
-	Username string `json:"username"`
+	Username string `json:"username"` // 用户名
 	RoleId   uint   `json:"roleId"`   // 角色
 	Name     string `json:"name"`     // 昵称
 	Disabled bool   `json:"disabled"` // 是否禁用
-	Password string `json:"password"`
+	Password string `json:"password"` // 密码
 }
 
 // 保存管理员
