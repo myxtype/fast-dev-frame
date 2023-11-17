@@ -36,7 +36,7 @@ func (c *AdminController) UpdatePassword(ctx *gin.Context) {
 
 	admin := app.GetAdminUser()
 	if !admin.Password.Check(req.OldPassword) {
-		app.Error(errors.New("账号密码错误"))
+		app.Error(ecode.ErrUserPassword)
 		return
 	}
 
