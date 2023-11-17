@@ -16,14 +16,18 @@ type userService struct{}
 
 var UserService = new(userService)
 
-func (s *userService) CreateToken(user *model.AdminUser) (string, error) {
-	claim := jwttool.BuildAdminClaims(user.ID, user.Password.Hash, user.LoginVersion, time.Hour*24*30)
+func (s *userService) CreateToken(user *model.User) (string, error) {
+	// 根据需求调整
+	// 7天过期时间，每次请求用户信息时最好重新生成一个返回给前端
+	// 这样就是用户7天没有登录，token就过期，需要重新登录
+	claim := jwttool.BuildUserClaims(user.ID, time.Hour*24*7)
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
 	return token.SignedString([]byte(conf.Get().JwtSecret.Rest))
 }
 
-func (s *userService) ParseToken(tokenStr string) (*jwttool.AdminClaims, error) {
-	var claim jwttool.AdminClaims
+func (s *userService) ParseToken(tokenStr string) (*jwttool.UserClaims, error) {
+	var claim jwttool.UserClaims
 
 	token, err := jwt.ParseWithClaims(tokenStr, &claim, func(token *jwt.Token) (interface{}, error) {
 		return []byte(conf.Get().JwtSecret.Rest), nil
