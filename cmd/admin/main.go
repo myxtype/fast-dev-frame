@@ -1,9 +1,11 @@
 package main
 
 import (
-	"frame/admin"
+	"frame/conf"
+	"frame/internal/admin"
 )
 
 func main() {
-	admin.StartServer()
+	httpServer := admin.NewHttpServer(conf.Get().AdminServer.Addr)
+	httpServer.Start()
 }

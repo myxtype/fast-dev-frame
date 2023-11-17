@@ -1,9 +1,11 @@
 package main
 
 import (
-	"frame/rest"
+	"frame/conf"
+	"frame/internal/rest"
 )
 
 func main() {
-	rest.StartServer()
+	httpServer := rest.NewHttpServer(conf.Get().RestServer.Addr)
+	httpServer.Start()
 }

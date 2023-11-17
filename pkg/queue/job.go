@@ -2,7 +2,7 @@ package queue
 
 import (
 	"encoding/json"
-	uuid "github.com/satori/go.uuid"
+	"frame/pkg/randstr"
 )
 
 // 队列任务
@@ -17,7 +17,7 @@ func NewDelayQueueJob(msg interface{}) (*QueueJob, error) {
 		return nil, err
 	}
 	return &QueueJob{
-		Id:   uuid.NewV4().String(),
+		Id:   randstr.Hex(8),
 		Data: data,
 	}, nil
 }

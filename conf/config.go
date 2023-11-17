@@ -3,12 +3,20 @@ package conf
 import "time"
 
 // 全局配置
-type gbeConfig struct {
-	Logger      loggerConfig
-	RestServer  serverConfig
-	AdminServer serverConfig
-	DataSource  dataSourceConfig
-	Redis       redisConfig
+type GbeConfig struct {
+	JwtSecret     jwtSecretConfig
+	Logger        loggerConfig
+	RestServer    serverConfig
+	AdminServer   serverConfig
+	PushingServer serverConfig
+	DataSource    dataSourceConfig
+	Redis         redisConfig
+}
+
+// JWT
+type jwtSecretConfig struct {
+	Admin string
+	Rest  string
 }
 
 // 日志配置
@@ -25,7 +33,7 @@ type serverConfig struct {
 
 // 数据库配置
 type dataSourceConfig struct {
-	DSN         string        // 数据库配置DSN：https://github.com/go-sql-driver/mysql#dsn-data-source-name
+	DSN         string        // 数据库配置DSN
 	MaxIdle     int           // 最大空闲数
 	MaxOpen     int           // 最大连接数
 	MaxLifetime time.Duration // 复用的最大时间：秒
@@ -37,5 +45,5 @@ type dataSourceConfig struct {
 type redisConfig struct {
 	Addr     string // 地址
 	Password string // 密码
-	DB       int    // 数据库
+	DB       int    // 数据库：0-7
 }

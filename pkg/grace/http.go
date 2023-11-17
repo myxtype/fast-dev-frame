@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-// 启动http服务，关闭重启时优雅的关闭
+// HttpRun 启动http服务，关闭重启时优雅地关闭
 func HttpRun(addr string, handler http.Handler, timeout time.Duration) {
 	srv := &http.Server{
 		Addr:    addr,

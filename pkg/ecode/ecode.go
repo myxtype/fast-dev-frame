@@ -2,7 +2,6 @@ package ecode
 
 import (
 	"fmt"
-	"github.com/pkg/errors"
 	"strings"
 )
 
@@ -30,16 +29,12 @@ func add(code int, msg string) Error {
 }
 
 type Errors interface {
-	// sometimes Error return Code in string form
+	// Error return Code in string form
 	Error() string
 	// Code get error code.
 	Code() int
 	// Message get code message.
 	Message() string
-	// Detail get error detail,it may be nil.
-	Details() []interface{}
-	// Equal for compatible.
-	Equal(error) bool
 	// Reload Message
 	Reload(string) Error
 }
@@ -53,6 +48,10 @@ func (e Error) Error() string {
 	return e.message
 }
 
+func (e Error) Code() int {
+	return e.code
+}
+
 func (e Error) Message() string {
 	return e.message
 }
@@ -62,20 +61,13 @@ func (e Error) Reload(message string) Error {
 	return e
 }
 
-func (e Error) Code() int {
-	return e.code
-}
-
-func (e Error) Details() []interface{} { return nil }
-
-func (e Error) Equal(err error) bool { return Equal(err, e) }
-
-func String(e string) Error {
-	if e == "" || strings.ToLower(e) == "ok" {
+func String(msg string) Error {
+	if msg == "" || strings.ToLower(msg) == "ok" {
 		return Ok
 	}
 	return Error{
-		code: -500, message: e,
+		code:    errServerCode,
+		message: msg,
 	}
 }
 
@@ -83,13 +75,9 @@ func Cause(err error) Errors {
 	if err == nil {
 		return Ok
 	}
-	if ec, ok := errors.Cause(err).(Errors); ok {
-		return ec
+	cause, ok := err.(Errors)
+	if ok {
+		return cause
 	}
 	return String(err.Error())
-}
-
-// Equal
-func Equal(err error, e Error) bool {
-	return Cause(err).Code() == e.Code()
 }

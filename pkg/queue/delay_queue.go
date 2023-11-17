@@ -3,7 +3,7 @@ package queue
 import (
 	"context"
 	"encoding/json"
-	"github.com/go-redis/redis/v8"
+	"github.com/redis/go-redis/v9"
 	"strconv"
 	"time"
 )
@@ -71,7 +71,7 @@ func (q *DelayQueue) Pop(ctx context.Context) (*QueueJob, error) {
 }
 
 func (q *DelayQueue) PushJob(job *QueueJob, delayAt time.Time) error {
-	return q.db.ZAdd(context.Background(), q.formatKey, &redis.Z{
+	return q.db.ZAdd(context.Background(), q.formatKey, redis.Z{
 		Score:  float64(delayAt.Unix()),
 		Member: job.Bytes(),
 	}).Err()
