@@ -52,7 +52,7 @@ func (s *userService) CheckToken(ctx context.Context, tokenStr string) (*model.U
 
 	// 判断是否禁用此用户
 	if user == nil || user.Disabled {
-		return nil, ecode.ErrUserDiabled
+		return nil, ecode.ErrUserDisabled
 	}
 
 	return user, nil
