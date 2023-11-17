@@ -1,17 +1,17 @@
-.PHONY: build clean zip all
+.PHONY: build build-linux clean zip all
 
 CMDs := rest job worker admin pushing
-
-build-linux:
-	@for var in $(CMDs); do \
-  		echo "building $${var}"; \
-  		GOOS=linux go build -o "./build/$${var}" "./cmd/$${var}"; \
-    done
 
 build:
 	@for var in $(CMDs); do \
   		echo "building $${var}"; \
   		go build -o "./build/$${var}" "./cmd/$${var}"; \
+    done
+
+build-linux:
+	@for var in $(CMDs); do \
+  		echo "building $${var}"; \
+  		GOOS=linux go build -o "./build/$${var}" "./cmd/$${var}"; \
     done
 
 clean:
