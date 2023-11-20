@@ -70,7 +70,10 @@ func initDb() error {
 
 	// 迁移
 	if cfg.Migrate {
+		gdb.AutoMigrate(&model.AdminLog{})
 		gdb.AutoMigrate(&model.AdminUser{})
+		gdb.AutoMigrate(&model.AdminRole{})
+
 		gdb.AutoMigrate(&model.User{})
 	}
 
