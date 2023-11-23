@@ -21,18 +21,17 @@ func NewQueue(name string, db *redis.Client) *Queue {
 	}
 }
 
-// 向队列中添加任务
-func (q *Queue) Push(msg interface{}) error {
-	job, err := NewDelayQueueJob(msg)
+// Push 向队列中添加任务
+func (q *Queue) Push(ctx context.Context, v interface{}) error {
+	msg, err := json.Marshal(v)
 	if err != nil {
 		return err
 	}
-
-	return q.PushJob(job)
+	return q.PushJob(ctx, msg)
 }
 
-// 取出一个任务
-func (q *Queue) Pop(ctx context.Context, timeout time.Duration) (*QueueJob, error) {
+// Pop 取出一个任务
+func (q *Queue) Pop(ctx context.Context, timeout time.Duration) ([]byte, error) {
 	result, err := q.db.BRPop(ctx, timeout, q.formatKey).Result()
 	if err != nil {
 		if err == redis.Nil {
@@ -41,14 +40,12 @@ func (q *Queue) Pop(ctx context.Context, timeout time.Duration) (*QueueJob, erro
 		return nil, err
 	}
 
-	var job QueueJob
-	if err := json.Unmarshal([]byte(result[1]), &job); err != nil {
-		return nil, err
-	}
+	msg := []byte(result[1])
 
-	return &job, nil
+	return msg, nil
 }
 
-func (q *Queue) PushJob(job *QueueJob) error {
-	return q.db.LPush(context.Background(), q.formatKey, job.Bytes()).Err()
+// PushJob 发布任务
+func (q *Queue) PushJob(ctx context.Context, msg []byte) error {
+	return q.db.LPush(ctx, q.formatKey, msg).Err()
 }
