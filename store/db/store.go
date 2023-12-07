@@ -10,24 +10,8 @@ import (
 	"time"
 )
 
-var (
-	store *Store
-	once  sync.Once
-)
-
 type Store struct {
 	db *gorm.DB
-}
-
-// 单例模式
-func Shared() *Store {
-	once.Do(func() {
-		err := initDb()
-		if err != nil {
-			panic(err)
-		}
-	})
-	return store
 }
 
 func NewStore(db *gorm.DB) *Store {
@@ -36,7 +20,16 @@ func NewStore(db *gorm.DB) *Store {
 	}
 }
 
-func initDb() error {
+// Shared 单例模式
+var Shared = sync.OnceValue(func() *Store {
+	store, err := initDb()
+	if err != nil {
+		panic(err)
+	}
+	return store
+})
+
+func initDb() (*Store, error) {
 	cfg := conf.Get().DataSource
 
 	c := &gorm.Config{}
@@ -47,12 +40,12 @@ func initDb() error {
 	// 打开数据库
 	gdb, err := gorm.Open(postgres.New(postgres.Config{DSN: cfg.DSN}), c)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	sqldb, err := gdb.DB()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// 设置空闲连接池中连接的最大数量
@@ -77,9 +70,7 @@ func initDb() error {
 		gdb.AutoMigrate(&model.User{})
 	}
 
-	store = NewStore(gdb)
-
-	return nil
+	return NewStore(gdb), nil
 }
 
 // 开启事务
