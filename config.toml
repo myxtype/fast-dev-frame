@@ -17,6 +17,10 @@ Addr = "127.0.0.1:3000"
 [AdminServer]
 Addr = "127.0.0.1:3001"
 
+# Pushung服务配置
+[PushingServer]
+Addr = "127.0.0.1:3002"
+
 # 数据库配置
 [DataSource]
 DSN = "host=localhost user=postgres password=password dbname=test port=5432 sslmode=disable"
