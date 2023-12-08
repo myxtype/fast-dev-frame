@@ -22,7 +22,7 @@ func (*UserController) GetUser(ctx *gin.Context) {
 		return
 	}
 
-	user, err := service.UserService.GetUserByID(ctx, req.ID)
+	user, err := service.UserService.GetUserCache(ctx, req.ID)
 	if err != nil {
 		app.Error(err)
 		return

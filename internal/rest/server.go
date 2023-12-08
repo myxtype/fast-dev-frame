@@ -26,6 +26,8 @@ func (server *HttpServer) Start() {
 	gin.DefaultWriter = io.Discard
 
 	// 轻量级缓存
+	// 主要用于统一缓存某个热点接口数据，比如轮播图、某个商品详情
+	// 数据缓存在API服务器的内存，所以不应该缓存较大的数据
 	store := persistence.NewInMemoryStore(time.Second)
 
 	r := gin.Default()
@@ -36,7 +38,7 @@ func (server *HttpServer) Start() {
 		userGroup := v1.Group("/user")
 		{
 			user := &UserController{}
-			userGroup.GET("/user", cache.CachePage(store, 1*time.Minute, user.GetUser))
+			userGroup.GET("/user", cache.CachePage(store, 30*time.Second, user.GetUser))
 			userGroup.POST("/user", user.UserRegister)
 		}
 	}
