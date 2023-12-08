@@ -6,8 +6,11 @@ import (
 	"frame/model"
 	"frame/pkg/ecode"
 	"frame/pkg/jwttool"
+	"frame/pkg/logger"
 	"frame/pkg/sql/sqltypes"
+	"frame/pkg/utils"
 	"frame/store/db"
+	"frame/store/rdb"
 	"github.com/golang-jwt/jwt/v4"
 	"time"
 )
@@ -49,7 +52,7 @@ func (s *userService) CheckToken(ctx context.Context, tokenStr string) (*model.U
 	}
 
 	// 获取用户
-	user, err := db.Shared().GetUserByID(ctx, claims.UID)
+	user, err := s.GetUserCache(ctx, claims.UID)
 	if err != nil {
 		return nil, err
 	}
@@ -75,4 +78,44 @@ func (s *userService) Register(ctx context.Context, username, password string) e
 	}
 
 	return db.Shared().AddUser(ctx, user)
+}
+
+// GetUsers 批量获取用户数据
+func (s *userService) GetUsers(ctx context.Context, ids []uint) (map[uint]*model.User, error) {
+	recordMap, err := rdb.Shared().GetUsers(ctx, ids)
+	if err != nil {
+		return nil, err
+	}
+
+	missingIds := utils.GetMissingIds(ids, recordMap)
+
+	if len(missingIds) > 0 {
+		missingRecords, err := db.Shared().GetUsersByKeys(ctx, missingIds)
+		if err != nil {
+			return nil, err
+		}
+
+		err = rdb.Shared().CacheUsers(ctx, missingRecords)
+		if err != nil {
+			logger.Sugar.Error(err)
+		}
+
+		for _, record := range missingRecords {
+			recordMap[record.ID] = record
+		}
+	}
+
+	return recordMap, nil
+}
+
+// GetUserCache 从缓存中获取用户数据
+func (s *userService) GetUserCache(ctx context.Context, id uint) (*model.User, error) {
+	records, err := s.GetUsers(ctx, []uint{id})
+	if err != nil {
+		return nil, err
+	}
+	if v, found := records[id]; found {
+		return v, nil
+	}
+	return nil, nil
 }

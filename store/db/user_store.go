@@ -22,3 +22,9 @@ func (s *Store) GetUserByID(ctx context.Context, id uint) (*model.User, error) {
 	}
 	return &user, err
 }
+
+func (s *Store) GetUsersByKeys(ctx context.Context, ids []uint) ([]*model.User, error) {
+	var data []*model.User
+	err := s.db.WithContext(ctx).Unscoped().Where(`"id" IN (?)`, ids).Find(&data).Error
+	return data, err
+}
