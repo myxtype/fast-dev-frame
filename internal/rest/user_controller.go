@@ -10,7 +10,7 @@ import (
 type UserController struct{}
 
 type GetUserRequest struct {
-	ID uint `json:"id" form:"id"`
+	ID uint `json:"id" form:"id" binding:"required"`
 }
 
 func (*UserController) GetUser(ctx *gin.Context) {
@@ -37,21 +37,16 @@ func (*UserController) GetUser(ctx *gin.Context) {
 }
 
 type UserRegisterRequest struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Username string `json:"username" form:"username" binding:"required"`
+	Password string `json:"password" form:"username" binding:"required"`
 }
 
 func (*UserController) UserRegister(ctx *gin.Context) {
 	app := request.New(ctx)
 
 	var req UserRegisterRequest
-	if err := ctx.BindJSON(&req); err != nil {
+	if err := ctx.ShouldBind(&req); err != nil {
 		app.Error(err)
-		return
-	}
-
-	if len(req.Username) == 0 || len(req.Password) == 0 {
-		app.Error(ecode.ErrRequest)
 		return
 	}
 
