@@ -43,22 +43,22 @@ func initDb() (*Store, error) {
 		return nil, err
 	}
 
-	sqldb, err := gdb.DB()
+	sqlDB, err := gdb.DB()
 	if err != nil {
 		return nil, err
 	}
 
 	// 设置空闲连接池中连接的最大数量
 	if cfg.MaxIdle > 0 {
-		sqldb.SetMaxIdleConns(cfg.MaxIdle)
+		sqlDB.SetMaxIdleConns(cfg.MaxIdle)
 	}
 	// 设置打开数据库连接的最大数量
 	if cfg.MaxOpen > 0 {
-		sqldb.SetMaxOpenConns(cfg.MaxOpen)
+		sqlDB.SetMaxOpenConns(cfg.MaxOpen)
 	}
 	// 设置连接可复用的最大时间
 	if cfg.MaxLifetime > 0 {
-		sqldb.SetConnMaxLifetime(cfg.MaxLifetime * time.Second)
+		sqlDB.SetConnMaxLifetime(cfg.MaxLifetime * time.Second)
 	}
 
 	// 迁移
@@ -82,17 +82,17 @@ func (s *Store) BeginTx() (*Store, error) {
 	return NewStore(db), nil
 }
 
-// 回滚事务
+// Rollback 回滚事务
 func (s *Store) Rollback() error {
 	return s.db.Rollback().Error
 }
 
-// 提交
+// Commit 提交
 func (s *Store) Commit() error {
 	return s.db.Commit().Error
 }
 
-// 数据库健康检查
+// Ping 数据库健康检查
 func (s *Store) Ping() error {
 	db, err := s.db.DB()
 	if err != nil {
