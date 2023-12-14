@@ -73,7 +73,7 @@ func initDb() (*Store, error) {
 	return NewStore(gdb), nil
 }
 
-// 开启事务
+// BeginTx 开启事务
 func (s *Store) BeginTx() (*Store, error) {
 	db := s.db.Begin()
 	if db.Error != nil {
