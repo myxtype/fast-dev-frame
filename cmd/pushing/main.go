@@ -1,7 +1,7 @@
 package main
 
 import (
-	"frame/internal/pushing"
+	"frame/app/pushing"
 )
 
 func main() {

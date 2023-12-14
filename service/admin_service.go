@@ -32,7 +32,7 @@ func (s *adminService) Login(ctx context.Context, username, password string) (*m
 		return nil, "", errors.New("密码错误")
 	}
 
-	token, err := s.LoginFromAdmin(ctx, admin)
+	token, err := s.LoginFromAdminUser(ctx, admin)
 	if err != nil {
 		return nil, "", err
 	}
@@ -40,8 +40,8 @@ func (s *adminService) Login(ctx context.Context, username, password string) (*m
 	return admin, token, err
 }
 
-// LoginFromAdmin 登录
-func (s *adminService) LoginFromAdmin(ctx context.Context, admin *model.AdminUser) (string, error) {
+// LoginFromAdminUser 登录
+func (s *adminService) LoginFromAdminUser(ctx context.Context, admin *model.AdminUser) (string, error) {
 	if admin.Disabled {
 		return "", errors.New("账号已被禁用")
 	}
@@ -92,7 +92,7 @@ func (s *adminService) CheckToken(ctx context.Context, tokenStr string) (*model.
 	}
 
 	// 获取用户
-	user, err := db.Shared().GetAdminUserByID(ctx, claims.UID)
+	user, err := db.Shared().GetAdminUser(ctx, claims.UID)
 	if err != nil {
 		return nil, err
 	}
@@ -134,7 +134,7 @@ func (s *adminService) UpdatePassword(ctx context.Context, admin *model.AdminUse
 
 // CheckAdminRole 检查权限
 func (s *adminService) CheckAdminRole(ctx context.Context, admin *model.AdminUser, permit string) (bool, error) {
-	role, err := db.Shared().GetAdminRoleById(ctx, admin.RoleId)
+	role, err := db.Shared().GetAdminRole(ctx, admin.RoleId)
 	if err != nil {
 		return false, err
 	}
@@ -151,34 +151,42 @@ func (s *adminService) CheckAdminRole(ctx context.Context, admin *model.AdminUse
 	return slices.Contains(role.Permissions, permit), nil
 }
 
-func (s *adminService) GetAdminByID(ctx context.Context, id uint) (*model.AdminUser, error) {
-	return db.Shared().GetAdminUserByID(ctx, id)
+// GetAdminUser 获取管理员
+func (s *adminService) GetAdminUser(ctx context.Context, id uint) (*model.AdminUser, error) {
+	return db.Shared().GetAdminUser(ctx, id)
 }
 
+// SaveAdminUser 保存管理员
 func (s *adminService) SaveAdminUser(ctx context.Context, admin *model.AdminUser) error {
 	return db.Shared().SaveAdminUser(ctx, admin)
 }
 
+// QueryAdminUsers 查询管理员
 func (s *adminService) QueryAdminUsers(ctx context.Context, id, roleId int64, username string, page, limit int) ([]*model.AdminUser, int64, error) {
 	return db.Shared().QueryAdminUsers(ctx, id, roleId, username, page, limit)
 }
 
+// GetAdminUserCount 获取管理员数据
 func (s *adminService) GetAdminUserCount(ctx context.Context) (int64, error) {
 	return db.Shared().GetAdminUserCount(ctx)
 }
 
+// QueryAdminRoles 查询管理员角色
 func (s *adminService) QueryAdminRoles(ctx context.Context, page, limit int) ([]*model.AdminRole, int64, error) {
 	return db.Shared().QueryAdminRoles(ctx, page, limit)
 }
 
-func (s *adminService) GetAdminRoleByID(ctx context.Context, id uint) (*model.AdminRole, error) {
-	return db.Shared().GetAdminRoleById(ctx, id)
+// GetAdminRole 获取管理员角色
+func (s *adminService) GetAdminRole(ctx context.Context, id uint) (*model.AdminRole, error) {
+	return db.Shared().GetAdminRole(ctx, id)
 }
 
+// SaveAdminRole 保存管理员角色
 func (s *adminService) SaveAdminRole(ctx context.Context, v *model.AdminRole) error {
 	return db.Shared().SaveAdminRole(ctx, v)
 }
 
+// InitAdmin 初始化管理员
 func (s *adminService) InitAdmin(ctx context.Context) error {
 	tx, err := db.Shared().BeginTx()
 	if err != nil {

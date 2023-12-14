@@ -123,7 +123,7 @@ func (c *AdminController) SaveAdminUser(ctx *gin.Context) {
 
 	if req.ID > 0 {
 		var err error
-		user, err = service.AdminService.GetAdminByID(ctx, req.ID)
+		user, err = service.AdminService.GetAdminUser(ctx, req.ID)
 		if err != nil {
 			app.Error(err)
 			return
@@ -171,7 +171,7 @@ func (c *AdminController) SaveAdminRole(ctx *gin.Context) {
 	var role *model.AdminRole
 	if req.ID > 0 {
 		var err error
-		role, err = service.AdminService.GetAdminRoleByID(ctx, req.ID)
+		role, err = service.AdminService.GetAdminRole(ctx, req.ID)
 		if err != nil {
 			app.Error(err)
 			return

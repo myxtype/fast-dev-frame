@@ -19,6 +19,7 @@ type userService struct{}
 
 var UserService = new(userService)
 
+// CreateToken 生成JWT
 func (s *userService) CreateToken(user *model.User) (string, error) {
 	// 根据需求调整
 	// 7天过期时间，每次请求用户信息时最好重新生成一个返回给前端
@@ -29,6 +30,7 @@ func (s *userService) CreateToken(user *model.User) (string, error) {
 	return token.SignedString([]byte(conf.Get().JwtSecret.Rest))
 }
 
+// ParseToken 解析JWT
 func (s *userService) ParseToken(tokenStr string) (*jwttool.UserClaims, error) {
 	var claim jwttool.UserClaims
 
@@ -45,6 +47,7 @@ func (s *userService) ParseToken(tokenStr string) (*jwttool.UserClaims, error) {
 	return &claim, nil
 }
 
+// CheckToken 检查JWT并返回用户模型
 func (s *userService) CheckToken(ctx context.Context, tokenStr string) (*model.User, error) {
 	claims, err := s.ParseToken(tokenStr)
 	if err != nil {

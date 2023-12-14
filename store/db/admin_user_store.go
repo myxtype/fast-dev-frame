@@ -6,8 +6,8 @@ import (
 	"gorm.io/gorm"
 )
 
-// GetAdminUserByID 获取管理员
-func (s *Store) GetAdminUserByID(ctx context.Context, id uint) (*model.AdminUser, error) {
+// GetAdminUser 获取管理员
+func (s *Store) GetAdminUser(ctx context.Context, id uint) (*model.AdminUser, error) {
 	var admin model.AdminUser
 	err := s.db.WithContext(ctx).First(&admin, id).Error
 	if err == gorm.ErrRecordNotFound {

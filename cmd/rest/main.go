@@ -1,8 +1,8 @@
 package main
 
 import (
+	"frame/app/rest"
 	"frame/conf"
-	"frame/internal/rest"
 )
 
 func main() {
